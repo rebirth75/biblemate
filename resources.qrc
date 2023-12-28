@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>img/bible2.png</file>
+        <file>img/search.png</file>
+        <file>img/bible.png</file>
+        <file>img/pen2.png</file>
+        <file>img/note3.png</file>
+        <file>img/note2.png</file>
+        <file>img/update.png</file>
+        <file>img/po.png</file>
+        <file>img/ru.png</file>
+        <file>img/us.png</file>
+        <file>img/exit.png</file>
+        <file>img/ic_launcher.png</file>
+        <file>img/sp.png</file>
+        <file>img/note1.png</file>
+        <file>img/ita.png</file>
+        <file>img/fontsize.png</file>
+        <file>img/pen1.png</file>
+        <file>img/save.png</file>
+        <file>img/ribbon.png</file>
+        <file>img/trash.png</file>
+        <file>img/print.png</file>
+    </qresource>
+</RCC>
