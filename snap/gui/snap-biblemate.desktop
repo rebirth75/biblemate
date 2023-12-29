@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=0.1
+Name=BudgetMate
+Comment=Helping friend to read your Bible
+Exec=BibleMate
+Icon=snap-biblemate.png
+Terminal=false
+Type=Application
+Categories=Education;
