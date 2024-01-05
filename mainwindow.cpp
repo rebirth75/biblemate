@@ -18,6 +18,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 
+QString app_release = "0.1.2";
 QDateTime date = QDateTime::currentDateTime();
 QString today = date.toString("yyyy.MM.dd");
 QSettings settings("Mate-Solutions", "Bible-Mate");
@@ -629,7 +630,7 @@ void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("About"));
-    msgBox.setText(tr("Bible Mate v.0.1\nFree to read and study the Bible."));
+    msgBox.setText(tr("Bible Mate vers.")+ app_release + tr("\nFree to read and study the Bible."));
     msgBox.setIconPixmap(QPixmap(":/res/img/ic_launcher.png"));
     msgBox.exec();
 
