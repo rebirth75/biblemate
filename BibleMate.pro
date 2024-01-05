@@ -53,33 +53,33 @@ DISTFILES += \
     BibleMate_it_IT.ts \
     BibleMate_es_ES.ts \
     BibleMate_fr_FR.ts \
-    BibleMate_ru_RU.ts \
-    bibles/cei2008.db \
-    bibles/diodati.db \
-    bibles/kingjamesversion.db \
-    bibles/newinternationalversionus.db \
-    bibles/newkingjamesversion.db \
-    bibles/nuovadiodati.db \
-    bibles/nuovariveduta.db \
-    bibles/reinavalera.db \
-    bibles/synodal.db \
-    img/bible.png \
-    img/bible2.png \
-    img/exit.png \
-    img/fontsize.png \
-    img/ic_launcher.png \
-    img/ita.png \
-    img/note1.png \
-    img/note2.png \
-    img/note3.png \
-    img/pen1.png \
-    img/pen2.png \
-    img/po.png \
-    img/ru.png \
-    img/search.png \
-    img/sp.png \
-    img/update.png \
-    img/us.png
+    BibleMate_ru_RU.ts
+#    bibles/cei2008.db \
+#    bibles/diodati.db \
+#    bibles/kingjamesversion.db \
+#    bibles/newinternationalversionus.db \
+#    bibles/newkingjamesversion.db \
+#    bibles/nuovadiodati.db \
+#    bibles/nuovariveduta.db \
+#    bibles/reinavalera.db \
+#    bibles/synodal.db \
+#    img/bible.png \
+#    img/bible2.png \
+#    img/exit.png \
+#    img/fontsize.png \
+#    img/ic_launcher.png \
+#    img/ita.png \
+#    img/note1.png \
+#    img/note2.png \
+#    img/note3.png \
+#    img/pen1.png \
+#    img/pen2.png \
+#    img/po.png \
+#    img/ru.png \
+#    img/search.png \
+#    img/sp.png \
+#    img/update.png \
+#    img/us.png
 
 RESOURCES += \
     resources.qrc
