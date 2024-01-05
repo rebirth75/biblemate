@@ -10,10 +10,10 @@ Verse::Verse(QString text, QString title, QString ref)
     this->chap = (temp[1].toInt());
     this->verse_num = (temp[2].toInt());
 }
-Verse::Verse(QString version)
+/*Verse::Verse(QString version)
 {
     this->version=version;
-}
+}*/
 
 QString Verse::getRef(){
     QString ref;

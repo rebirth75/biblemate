@@ -2,16 +2,7 @@
 
 #include <QStringList>
 
-Book::Book()
-{
 
-}
-
-Book::Book(QString book_id)
-{
-    this->book_id=book_id;
-
-}
 void Book::addVerse(Verse v)
 {
     this->verses.push_back(v);
@@ -20,15 +11,7 @@ void Book::addVerse(Verse v)
         if (this->num_cap!=last.chap) this->num_cap++;
      }
 }
-Verse* Book::getVerse(int cap, int v)
-{
-    for (Verse verse:this->verses){
-        if (verse.chap==cap&&verse.verse_num==v){
-            return &verse;
-        }
-    }
-    return NULL;
-}
+
 QStringList Book::getStringList()
 {
     QStringList stringList;

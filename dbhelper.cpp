@@ -5,17 +5,30 @@
 #include <QDebug>
 #include <QSqlError>
 #include <QFile>
+#include <QDir>
+#include <QStandardPaths>
 
 DBHelper::DBHelper()
 {
 
 }
 
-DBHelper::DBHelper(const QString path_bibles, const QString path_notes, QString version)
+DBHelper::DBHelper(const QString path_notes, QString version)
 {
+    QString localpath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    if (!QDir(localpath).exists())
+        QDir().mkdir(localpath);
+
+    if (!QFile::exists(localpath+"/"+version+".db")){
+        //QFile res_db(":/bibles/"+version+".db");
+        const QString local_db = localpath+"/"+version+".db";
+        const QString res_db = ":/bibles/bibles/"+version+".db";
+        qDebug()<< "Bible_DB copied: " << QFile::copy(res_db,local_db);
+    }
 
     m_db = QSqlDatabase::addDatabase("QSQLITE", "bible");
-    m_db.setDatabaseName(path_bibles+"/"+version+".db");
+    //m_db.setDatabaseName(path_bibles+"/"+version+".db");
+    m_db.setDatabaseName(localpath+"/"+version+".db");
     m_db_notes  = QSqlDatabase::addDatabase("QSQLITE", "notes");
     m_db_notes.setDatabaseName(path_notes+"/notes.db");
 
@@ -47,7 +60,7 @@ void DBHelper::createBibleTable()
 {
     QSqlQuery sql(m_db);
     sql.prepare("CREATE TABLE IF NOT EXISTS bibles (id INTEGER PRIMARY KEY, version TEXT, book TEXT, chap INTEGER, verse INTEGER, text TEXT, title TEXT, link TEXT);");
-    qDebug() << sql.exec();
+    qDebug() << "Create Bible Table" << sql.exec();
 
 }
 
@@ -60,7 +73,7 @@ void DBHelper::createNoteTable()
 {
     QSqlQuery sql(m_db_notes);
     sql.prepare("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, book TEXT, chap INTEGER, verse INTEGER, title TEXT, text TEXT, note_date TEXT, highlight TEXT, ribbon INTEGER, ribbon_title TEXT, ribbon_date TEXT);");
-    qDebug() << sql.exec();
+    qDebug() << "Create Note Table" << sql.exec();
 }
 
 
@@ -81,7 +94,7 @@ Book DBHelper::GetBook(QString version, QString book_id)
     query.bindValue(":version", version);
     query.bindValue(":book_id", book_id);
 
-    qDebug() << query.exec();
+    qDebug() << "GetBook query" << query.exec();
     qDebug() << query.lastError();
     qDebug() << query.executedQuery();
 
@@ -109,9 +122,11 @@ int DBHelper::getNumChapters(QString book_id){
 
     query.prepare("SELECT COUNT(DISTINCT chap) FROM bibles WHERE book=:book_id;");
     query.bindValue(":book_id", book_id);
-    qDebug() << query.exec();
+    qDebug() << "Get Chapter Numbers" << query.exec();
     query.first();
-    return query.value(0).toInt();
+    int result = query.value(0).toInt();
+    qDebug() << result;
+    return result;
 }
 
 int DBHelper::getNumVerses(QString book_id, QString chap){
@@ -120,9 +135,11 @@ int DBHelper::getNumVerses(QString book_id, QString chap){
     query.prepare("SELECT COUNT(DISTINCT verse) FROM bibles WHERE book=:book_id AND chap=:chap;");
     query.bindValue(":book_id", book_id);
     query.bindValue(":chap", chap);
-    qDebug() << query.exec();
+    qDebug() << "Get Verses Numbers" << query.exec();
     query.first();
-    return query.value(0).toInt();
+    int result = query.value(0).toInt();
+    qDebug() << result;
+    return result;
 }
 
 std::vector<Note> DBHelper::getNotes(QString book_id) {
@@ -130,7 +147,7 @@ std::vector<Note> DBHelper::getNotes(QString book_id) {
     QSqlQuery query(m_db_notes);
     query.prepare("SELECT * FROM notes WHERE book =:book_id;");
     query.bindValue(":book_id", book_id);
-    qDebug() << query.exec();
+    qDebug() << "GetNotes" << query.exec();
     while (query.next())
     {
         Note n;
@@ -155,7 +172,7 @@ std::vector<Note> DBHelper::getAllNotes(bool ribbon) {
     std::vector<Note> result;
     QSqlQuery query(m_db_notes);
     query.prepare("SELECT * FROM notes;");
-    qDebug() << query.exec();
+    qDebug() << "GelAllNotes" << query.exec();
     while (query.next())
     {
         Note n;
@@ -182,7 +199,7 @@ std::vector<Note> DBHelper::getAllRibbons() {
     std::vector<Note> result;
     QSqlQuery query(m_db_notes);
     query.prepare("SELECT * FROM notes WHERE ribbon=1;");
-    qDebug() << query.exec();
+    qDebug() << "GetAllRibbons" << query.exec();
     while (query.next())
     {
         Note n;
@@ -219,7 +236,7 @@ int DBHelper::insertNote(Note note){
     sql.bindValue(":ribbon_title", note.ribbon_title);
     sql.bindValue(":ribbon", note.ribbon);
 
-    qDebug() << sql.exec();
+    qDebug() << "InsertNote" << sql.exec();
     qDebug() << sql.lastError();
     qDebug() << sql.executedQuery();
 
@@ -240,7 +257,7 @@ bool DBHelper::updateNote(Note note){
     sql.bindValue(":ribbon", note.ribbon);
     sql.bindValue(":id", note.id);
 
-    qDebug() << sql.exec();
+    qDebug() << "UpdateNote" << sql.exec();
     qDebug() << sql.lastError();
     qDebug() << sql.executedQuery();
 
@@ -253,7 +270,7 @@ bool DBHelper::deleteNote(Note note){
     sql.prepare("DELETE FROM notes WHERE id=:id;");
     sql.bindValue(":id", note.id);
 
-    qDebug() << sql.exec();
+    qDebug() << "DeleteNote" << sql.exec();
     qDebug() << sql.lastError();
     qDebug() << sql.executedQuery();
 
@@ -271,7 +288,7 @@ Note DBHelper::findNote(QString ref){
     query.bindValue(":book_id", book_id);
     query.bindValue(":chap", chap);
     query.bindValue(":verse", verse);
-    qDebug() << query.exec();
+    qDebug() << "FindNote" << query.exec();
     Note n;
     while (query.next())
     {
@@ -328,7 +345,7 @@ std::vector<Verse> DBHelper::searchText(QStringList texts, bool exact)
         query.prepare(sql);
         query.bindValue(":text1", QString("%%1%").arg(texts[0]));
     }
-    qDebug() << query.exec();
+    qDebug() << "SearchText" << query.exec();
     qDebug() << query.lastError();
     qDebug() << query.executedQuery();
     while (query.next())
@@ -370,7 +387,7 @@ std::vector<Note> DBHelper::getAllNotes(QStringList texts, bool ribbon) {
         query.bindValue(":text1", QString("%%1%").arg(texts[0]));
     }
 
-    qDebug() << query.exec();
+    qDebug() << "GetAllNotes" << query.exec();
     while (query.next())
     {
         Note n;

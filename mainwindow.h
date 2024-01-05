@@ -101,11 +101,27 @@ private slots:
 
     void on_pushButton_12_clicked();
 
+    void on_pushButton_16_clicked();
+
+    void on_pushButton_17_clicked();
+
+    void on_pushButton_18_clicked();
+
+    void on_pushButton_19_clicked();
+
+    void on_pushButton_20_clicked();
+
+    void on_pushButton_21_clicked();
+
+    void on_pushButton_22_clicked();
+
+    void on_pushButton_23_clicked();
+
 private:
     Ui::MainWindow          *ui;
     QStringListModel        *m_Model;
     QItemSelectionModel     *selectionModel;
-    DBHelper                *dbhelper;
+//    DBHelper                *dbhelper;
     Book                    book;
 
     std::vector<Note>       allNotes_T1, allNotes_T3, allNotes_T4;
@@ -113,10 +129,10 @@ private:
     std::vector<Verse>      results;
     QStringList             books_name;
     QStringList             chapters, verses;
-    Note                    *selNote_T1, *selNote_T3;
+//    Note                    *selNote_T1, *selNote_T3;
     int                     fontsize;
     QString                 version;
-    QSettings               *settings;
+//    QSettings               settings;
     QString                 path_bibles, path_notes;
     QString                 lastribbon;
     void setComboBox(QString ref);

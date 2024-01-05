@@ -7,10 +7,13 @@ class Verse
 {
 public:
     Verse(QString text, QString title, QString ref);
-    Verse(QString version);
+    Verse(QString version):version(version){};
     QString getRef();
+
     QString text, book, title, version;
-    int chap, verse_num;
+    int chap=0;
+    int verse_num=0;
+
 private:
 
 };

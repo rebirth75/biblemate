@@ -2,6 +2,7 @@ QT += core gui \
       sql \
       printsupport
 
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -49,6 +50,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    BibleMate_it_IT.ts \
+    BibleMate_es_ES.ts \
     BibleMate_fr_FR.ts \
     BibleMate_ru_RU.ts \
     bibles/cei2008.db \
@@ -60,8 +63,6 @@ DISTFILES += \
     bibles/nuovariveduta.db \
     bibles/reinavalera.db \
     bibles/synodal.db \
-    cei2008.db \
-    diodati.db \
     img/bible.png \
     img/bible2.png \
     img/exit.png \
@@ -78,14 +79,7 @@ DISTFILES += \
     img/search.png \
     img/sp.png \
     img/update.png \
-    img/us.png \
-    kingjamesversion.db \
-    newinternationalversionus.db \
-    newkingjamesversion.db \
-    nuovadiodati.db \
-    nuovariveduta.db \
-    reinavalera.db \
-    synodal.db
+    img/us.png
 
 RESOURCES += \
     resources.qrc

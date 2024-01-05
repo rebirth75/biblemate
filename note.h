@@ -5,7 +5,7 @@
 class Note
 {
 public:
-    Note();
+    Note()=default;
     int id;
     QString book_id;
     int chap;
@@ -18,6 +18,7 @@ public:
     bool editing;
     QString ribbon_title;
     QString ribbon_date;
+
     QString getRef();
 
 };

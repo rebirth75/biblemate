@@ -6,14 +6,14 @@
 class Book
 {
 public:
-    Book();
-    Book(QString id);
+    Book()=default;
+    Book(QString id):book_id(id),num_cap(0){};
+
     std::vector<Verse> verses;
-    QString book_id;
-    int num_cap;
+    QString book_id="";
+    int num_cap=0;
 
     void addVerse(Verse v);
-    Verse* getVerse(int cap,int v);
     QStringList getStringList();
 
 private:

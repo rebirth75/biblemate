@@ -20,6 +20,10 @@
 
 QDateTime date = QDateTime::currentDateTime();
 QString today = date.toString("yyyy.MM.dd");
+QSettings settings("Mate-Solutions", "Bible-Mate");
+DBHelper dbhelper;
+Note selNote_T1, selNote_T3;
+const QColor yellow	( 255, 255,   0 );
 
 QStringList books_id = {
     "Gen","Exod","Lev","Num","Deut","Josh","Judg","Ruth","1Sam","2Sam",
@@ -35,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
     ui->plainTextEdit->installEventFilter(this);
+    ui->plainTextEdit_2->installEventFilter(this);
 
     books_name = QStringList({
        tr("Genesis"),tr("Exodus"),tr("Leviticus"),tr("Numbers"),tr("Deuteronomy"),tr("Joshua"),tr("Judges"),tr("Ruth"),tr("1 Samuel"),tr("2 Samuel"),
@@ -45,20 +50,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
        tr("Ephesians"),tr("Philippians"),tr("Colossians"),tr("1 Thessalonians"),tr("2 Thessalonians"),tr("1 Timothy"),tr("2 Timothy"),tr("Titus"),tr("Philemon"),
        tr("Hebrews"),tr("James"),tr("1 Peter"),tr("2 Peter"),tr("1 John"),tr("2 John"),tr("3 John"),tr("Jude"),tr("Revelation")});
 
-    settings = new QSettings("Mate-Solutions", "Bible-Mate");
-    fontsize=settings->value("fontsize",16).toUInt();
-    version=settings->value("version","nuovadiodati").toString();
-    lastribbon=settings->value("lastribbon","Gen.1:1").toString();
+    fontsize = settings.value("fontsize",16).toUInt();
+    version = settings.value("version","nuovadiodati").toString();
+    lastribbon = settings.value("lastribbon","Gen.1:1").toString();
 
-    path_bibles = qApp->applicationDirPath()+"/bibles";
-    path_notes = settings->value("path_notes",
+    //path_bibles = qApp->applicationDirPath()+"/bibles";
+    path_notes = settings.value("path_notes",
                                  QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toString();
-    dbhelper = new DBHelper(path_bibles, path_notes,version);
+    dbhelper = DBHelper(path_notes,version);
 
     ui->book_CBox->addItems(books_name);
 
     setComboBox(lastribbon);
 
+    qDebug() << "Step 1";
     QActionGroup* group = new QActionGroup( this );
     group->setExclusive(true);
     ui->action14->setActionGroup(group);
@@ -67,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->action20->setActionGroup(group);
     ui->action22->setActionGroup(group);
 
+    qDebug() << "Step 2";
     QActionGroup* groupB = new QActionGroup( this );
     groupB->setExclusive(true);
     ui->actionNuova_Diodati->setActionGroup(groupB);
@@ -91,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         break;
     }
 
+    qDebug() << "Step 3";
     if (version=="nuovadiodati") ui->actionNuova_Diodati->setChecked(true);
     else if (version=="newinternationalversionus") ui->actionNew_International->setChecked(true);
     else if (version=="nuovariveduta") ui->actionNuova_Riveduta->setChecked(true);
@@ -100,8 +107,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     else if (version=="newkingjamesversion") ui->actionNew_King_James->setChecked(true);
     else if (version=="synodal") ui->actionSynodal->setChecked(true);
 
+
     //ui->pushButton->click();
     ui->pushButton_7->setEnabled(false);
+    qDebug() << "Step 4";
 }
 
 MainWindow::~MainWindow()
@@ -114,14 +123,14 @@ void MainWindow::setComboBox(QString ref)
     int idx = books_id.indexOf(ref.split(".")[0]);
     ui->book_CBox->setCurrentIndex(idx);
 
-    int book_chaps = dbhelper->getNumChapters(ref.split(".")[0]);
+    int book_chaps = dbhelper.getNumChapters(ref.split(".")[0]);
     for (int i=1; i<=book_chaps; i++){
         chapters.push_back(QString::number(i));
     }
     ui->chapter_CBox->addItems(chapters);
     ui->chapter_CBox->setCurrentText(ref.split(".")[1].split(":")[0]);
 
-    int num_verses = dbhelper->getNumVerses(
+    int num_verses = dbhelper.getNumVerses(
                 ref.split(".")[0],
                 ref.split(".")[1].split(":")[0]);
     for (int i=1; i<=num_verses; i++){
@@ -144,23 +153,26 @@ void MainWindow::setComboBox(QString ref)
 void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &previous)       //SELECT A VERSE IN TAB1
 {
     if (!ui->checkBox_2->isChecked()){
+
         //if (ui->plainTextEdit->toPlainText()!=""||ui->lineEdit_3->text()!=""){
-        if (previous.row()!=-1 && selNote_T1->editing){
+
+        if (previous.row()!=-1 && selNote_T1.editing){
             //save note temporary
-            selNote_T1->title=ui->lineEdit_3->text();
-            selNote_T1->text=ui->plainTextEdit->toPlainText();
+            selNote_T1.title = ui->lineEdit_3->text();
+            //selNote_T1.text = ui->plainTextEdit->toPlainText();
+            selNote_T1.text = ui->plainTextEdit->document()->toHtml();
 
             bool note_exist=false;
             for (int i=0; i<(int)allNotes_T1.size(); i++){
-                if (allNotes_T1[i].getRef() == selNote_T1->getRef()){
-                    allNotes_T1[i].title = selNote_T1->title;
-                    allNotes_T1[i].text = selNote_T1->text;
-                    allNotes_T1[i].editing = selNote_T1->editing;
+                if (allNotes_T1[i].getRef() == selNote_T1.getRef()){
+                    allNotes_T1[i].title = selNote_T1.title;
+                    allNotes_T1[i].text = selNote_T1.text;
+                    allNotes_T1[i].editing = selNote_T1.editing;
                     note_exist=true;
                     break;
                 }
             }
-            if (!note_exist) allNotes_T1.push_back(*selNote_T1);
+            if (!note_exist) allNotes_T1.push_back(selNote_T1);
 
             //ui->plainTextEdit->clear();
             //ui->lineEdit_3->clear();
@@ -171,29 +183,30 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
 
         qDebug() << "changed" << "current" << current.row() << "(" << index.at(current.row()) << ")" << "previous" << previous.row();
 
-        selNote_T1 = new Note();
-        selNote_T1->id = 0;
-        selNote_T1->book_id = books_id.at(ui->book_CBox->currentIndex());
-        selNote_T1->chap = index.at(current.row()).split(":")[0].toInt();
-        selNote_T1->verse = index.at(current.row()).split(":")[1].toInt();
-        selNote_T1->editing = false;
+        selNote_T1 = Note();
+        selNote_T1.id = 0;
+        selNote_T1.book_id = books_id.at(ui->book_CBox->currentIndex());
+        selNote_T1.chap = index.at(current.row()).split(":")[0].toInt();
+        selNote_T1.verse = index.at(current.row()).split(":")[1].toInt();
+        selNote_T1.editing = false;
         for (Note note:allNotes_T1){
-            if (note.chap==selNote_T1->chap && note.verse==selNote_T1->verse){
+            if (note.chap==selNote_T1.chap && note.verse==selNote_T1.verse){
                 //selNote = &note;
-                selNote_T1->id =note.id;
-                selNote_T1->text = note.text;
-                selNote_T1->title = note.title;
-                selNote_T1->note_date = note.note_date;
-                selNote_T1->ribbon_date = note.ribbon_date;
-                selNote_T1->ribbon_title = note.ribbon_title;
-                selNote_T1->ribbon = note.ribbon;
-                ui->lineEdit_3->setText(selNote_T1->title);
-                ui->plainTextEdit->appendPlainText(selNote_T1->text);
-                selNote_T1->editing = note.editing;
+                selNote_T1.id =note.id;
+                selNote_T1.text = note.text;
+                selNote_T1.title = note.title;
+                selNote_T1.note_date = note.note_date;
+                selNote_T1.ribbon_date = note.ribbon_date;
+                selNote_T1.ribbon_title = note.ribbon_title;
+                selNote_T1.ribbon = note.ribbon;
+                ui->lineEdit_3->setText(selNote_T1.title);
+                //ui->plainTextEdit->setPlainText(selNote_T1.text);
+                ui->plainTextEdit->appendHtml(selNote_T1.text);
+                selNote_T1.editing = note.editing;
                 break;
             }
         }
-        if (selNote_T1->editing){
+        if (selNote_T1.editing){
             ui->label_16->setText(tr("not saved"));
             ui->pushButton_3->setEnabled(true);
         }
@@ -224,13 +237,14 @@ void MainWindow::Update_tab3(const QModelIndex &current, const QModelIndex &prev
 {
     qDebug() << "changed" << "current" << current.row() << "previous" << previous.row();
 
-    selNote_T3 = &allNotes_T3[current.row()];
+    selNote_T3 = allNotes_T3[current.row()];
 
-    ui->lineEdit_2->setText(selNote_T3->title);
+    ui->lineEdit_2->setText(selNote_T3.title);
     ui->plainTextEdit_2->clear();
-    ui->plainTextEdit_2->appendPlainText(selNote_T3->text);
-    ui->label_12->setText(selNote_T3->note_date);
-    ui->label_14->setText(selNote_T3->getRef());
+    ui->plainTextEdit_2->appendHtml(selNote_T3.text);
+    ui->label_12->setText(selNote_T3.note_date);
+    ui->label_14->setText(selNote_T3.getRef());
+    ui->pushButton_6->setEnabled(true);
 }
 
 void MainWindow::Update_tab2(const QModelIndex &current, const QModelIndex &previous)   //SELECT A VERSE IN TAB2
@@ -256,9 +270,9 @@ void MainWindow::on_pushButton_clicked()                                        
             break;
         }
     }
-    book = dbhelper->GetBook(version, book_sel);
+    book = dbhelper.GetBook(version, book_sel);
 
-    /*int book_chaps = dbhelper->getNumChapters(book_sel);
+    /*int book_chaps = dbhelper.getNumChapters(book_sel);
     chapters.clear();
     for (int i=1; i<=book_chaps; i++){
         chapters.push_back(QString::number(i));
@@ -267,7 +281,7 @@ void MainWindow::on_pushButton_clicked()                                        
     ui->chapter_CBox->addItems(chapters);
     */
 
-    allNotes_T1 = dbhelper->getAllNotes(true);
+    allNotes_T1 = dbhelper.getAllNotes(true);
 
     QStandardItemModel *model_tab1 = new QStandardItemModel();
 
@@ -377,30 +391,30 @@ void MainWindow::on_pushButton_3_clicked()                                      
     QString chap = index.at(ui->listView->currentIndex().row()).split(":")[0];
     QString verse = index.at(ui->listView->currentIndex().row()).split(":")[1];
     QString book_id = ui->book_CBox->currentText();
-    note = dbhelper->findNote(book_id+"."+chap+":"+verse);    
+    note = dbhelper.findNote(book_id+"."+chap+":"+verse);
     */
 
 
-    selNote_T1->note_date=today;
-    selNote_T1->text=ui->plainTextEdit->toPlainText();
-    selNote_T1->text.remove("**UNSAVED**");
-    selNote_T1->title=ui->lineEdit_3->text();
-    selNote_T1->editing=false;
-    if (selNote_T1->id==0){
-        selNote_T1->id = dbhelper->insertNote(*selNote_T1);
+    selNote_T1.note_date = today;
+    //selNote_T1.text = ui->plainTextEdit->toPlainText();
+    selNote_T1.text = ui->plainTextEdit->document()->toHtml();
+    selNote_T1.title = ui->lineEdit_3->text();
+    selNote_T1.editing = false;
+    if (selNote_T1.id == 0){
+        selNote_T1.id = dbhelper.insertNote(selNote_T1);
     }
     else{
-        dbhelper->updateNote(*selNote_T1);
+        dbhelper.updateNote(selNote_T1);
     }
 
     bool note_exist=false;
     for (int i=0;i<(int)allNotes_T1.size();i++){
-        if (allNotes_T1[i].getRef()==selNote_T1->getRef()){
-            allNotes_T1[i].id = selNote_T1->id;
-            allNotes_T1[i].text = selNote_T1->text;
-            allNotes_T1[i].title = selNote_T1->title;
-            allNotes_T1[i].note_date = selNote_T1->note_date;
-            allNotes_T1[i].editing = selNote_T1->editing;
+        if (allNotes_T1[i].getRef() == selNote_T1.getRef()){
+            allNotes_T1[i].id = selNote_T1.id;
+            allNotes_T1[i].text = selNote_T1.text;
+            allNotes_T1[i].title = selNote_T1.title;
+            allNotes_T1[i].note_date = selNote_T1.note_date;
+            allNotes_T1[i].editing = selNote_T1.editing;
             ui->label_16->setText("");
             ui->pushButton_3->setEnabled(false);
             note_exist=true;
@@ -408,14 +422,12 @@ void MainWindow::on_pushButton_3_clicked()                                      
         }
     }
     if (!note_exist) {
-        allNotes_T1.push_back(*selNote_T1);
+        allNotes_T1.push_back(selNote_T1);
     }
 
-    ui->plainTextEdit->clear();
-    ui->plainTextEdit->appendPlainText(selNote_T1->text);
-    ui->lineEdit_3->setText(selNote_T1->title);
+    //ui->plainTextEdit->setPlainText(selNote_T1.text);
+    //ui->lineEdit_3->setText(selNote_T1.title);
 
-    //ui->pushButton->click();
 }
 
 /**
@@ -427,7 +439,7 @@ void MainWindow::on_pushButton_2_clicked()                                      
 {
     QString temp=ui->lineEdit->text();
     QStringList templist = temp.split(" ");
-    results=dbhelper->searchText(templist, ui->checkBox->isChecked());
+    results=dbhelper.searchText(templist, ui->checkBox->isChecked());
 
     ui->label_8->setText(QString("%1").arg(results.size()));
 
@@ -504,10 +516,10 @@ void MainWindow::on_pushButton_5_clicked()                                      
     //Apply FILTERS to allNotes
     if (ui->lineEdit_4->text()!=""){
         QStringList filter=ui->lineEdit_4->text().split(" ");
-        allNotes_T3 = dbhelper->getAllNotes(filter,false);
+        allNotes_T3 = dbhelper.getAllNotes(filter,false);
     }
     else{
-        allNotes_T3 = dbhelper->getAllNotes(false);
+        allNotes_T3 = dbhelper.getAllNotes(false);
     }
     if (ui->radioButton->isChecked())
         std::sort(allNotes_T3.begin(), allNotes_T3.end(), compareFunction_date);
@@ -530,8 +542,10 @@ void MainWindow::on_pushButton_5_clicked()                                      
 
     for (Note note:allNotes_T3){
         QStandardItem *item = new QStandardItem();
-        item->setData(note.title,ListViewDelegate_2::HeaderRole);
-        QString subtext(note.text);
+        item->setData(note.title,ListViewDelegate_2::HeaderRole);        
+        QTextEdit temp;
+        temp.setHtml(note.text);
+        QString subtext(temp.toPlainText());
         subtext=subtext.replace("\n"," ").mid(0,35)+"...";
         item->setData(subtext,ListViewDelegate_2::SubheaderRole);
         model_tab3->appendRow(item);
@@ -549,9 +563,9 @@ void MainWindow::on_pushButton_5_clicked()                                      
 void MainWindow::on_actionNuova_Diodati_triggered()
 {
     version="nuovadiodati";
-    settings->setValue("version","nuovadiodati");
-    settings->sync();
-    dbhelper = new DBHelper(path_bibles,path_notes,version);
+    settings.setValue("version","nuovadiodati");
+
+    dbhelper = DBHelper(path_notes,version);
     ui->pushButton->click();
 }
 
@@ -559,9 +573,9 @@ void MainWindow::on_actionNuova_Diodati_triggered()
 void MainWindow::on_actionNew_International_triggered()
 {
     version="newinternationalversionus";
-    settings->setValue("version","newinternationalversionus");
-    settings->sync();
-    dbhelper = new DBHelper(path_bibles,path_notes,version);
+    settings.setValue("version","newinternationalversionus");
+
+    dbhelper = DBHelper(path_notes,version);
     ui->pushButton->click();
 }
 
@@ -569,8 +583,8 @@ void MainWindow::on_actionNew_International_triggered()
 void MainWindow::on_action22_triggered()
 {
     fontsize=22;
-    settings->setValue("fontsize",fontsize);
-    settings->sync();
+    settings.setValue("fontsize",fontsize);
+
     ui->pushButton->click();
 }
 
@@ -578,8 +592,8 @@ void MainWindow::on_action22_triggered()
 void MainWindow::on_action20_triggered()
 {
     fontsize=20;
-    settings->setValue("fontsize",fontsize);
-    settings->sync();
+    settings.setValue("fontsize",fontsize);
+
     ui->pushButton->click();
 }
 
@@ -587,8 +601,8 @@ void MainWindow::on_action20_triggered()
 void MainWindow::on_action18_triggered()
 {
     fontsize=18;
-    settings->setValue("fontsize",fontsize);
-    settings->sync();
+    settings.setValue("fontsize",fontsize);
+
     ui->pushButton->click();
 }
 
@@ -596,8 +610,8 @@ void MainWindow::on_action18_triggered()
 void MainWindow::on_action16_triggered()
 {
     fontsize=16;
-    settings->setValue("fontsize",fontsize);
-    settings->sync();
+    settings.setValue("fontsize",fontsize);
+
     ui->pushButton->click();
 }
 
@@ -605,8 +619,8 @@ void MainWindow::on_action16_triggered()
 void MainWindow::on_action14_triggered()
 {
     fontsize=14;
-    settings->setValue("fontsize",fontsize);
-    settings->sync();
+    settings.setValue("fontsize",fontsize);
+
     ui->pushButton->click();
 }
 
@@ -625,9 +639,9 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionKing_James_triggered()
 {
     version="kingjamesversion";
-    settings->setValue("version","kingjamesversion");
-    settings->sync();
-    dbhelper = new DBHelper(path_bibles,path_notes,version);
+    settings.setValue("version","kingjamesversion");
+
+    dbhelper = DBHelper(path_notes,version);
     ui->pushButton->click();
 }
 
@@ -635,9 +649,9 @@ void MainWindow::on_actionKing_James_triggered()
 void MainWindow::on_actionNew_King_James_triggered()
 {
     version="newkingjamesversion";
-    settings->setValue("version","newkingjamesversion");
-    settings->sync();
-    dbhelper = new DBHelper(path_bibles,path_notes,version);
+    settings.setValue("version","newkingjamesversion");
+
+    dbhelper = DBHelper(path_notes,version);
     ui->pushButton->click();
 }
 
@@ -645,9 +659,9 @@ void MainWindow::on_actionNew_King_James_triggered()
 void MainWindow::on_actionCEI_2008_triggered()
 {
     version="cei2008";
-    settings->setValue("version","cei2008");
-    settings->sync();
-    dbhelper = new DBHelper(path_bibles,path_notes,version);
+    settings.setValue("version","cei2008");
+
+    dbhelper = DBHelper(path_notes,version);
     ui->pushButton->click();
 }
 
@@ -655,9 +669,9 @@ void MainWindow::on_actionCEI_2008_triggered()
 void MainWindow::on_actionNuova_Riveduta_triggered()
 {
     version="nuovariveduta";
-    settings->setValue("version","nuovariveduta");
-    settings->sync();
-    dbhelper = new DBHelper(path_bibles,path_notes,version);
+    settings.setValue("version","nuovariveduta");
+
+    dbhelper = DBHelper(path_notes,version);
     ui->pushButton->click();
 }
 
@@ -665,9 +679,9 @@ void MainWindow::on_actionNuova_Riveduta_triggered()
 void MainWindow::on_actionDiodati_triggered()
 {
     version="diodati";
-    settings->setValue("version","diodati");
-    settings->sync();
-    dbhelper = new DBHelper(path_bibles,path_notes,version);
+    settings.setValue("version","diodati");
+
+    dbhelper = DBHelper(path_notes,version);
     ui->pushButton->click();
 }
 
@@ -675,9 +689,9 @@ void MainWindow::on_actionDiodati_triggered()
 void MainWindow::on_actionSynodal_triggered()
 {
     version="synodal";
-    settings->setValue("version","synodal");
-    settings->sync();
-    dbhelper = new DBHelper(path_bibles,path_notes,version);
+    settings.setValue("version","synodal");
+
+    dbhelper = DBHelper(path_notes,version);
     ui->pushButton->click();
 }
 
@@ -688,7 +702,8 @@ void MainWindow::on_actionExit_triggered()
     ref+=books_id.at(ui->book_CBox->currentIndex())+".";
     ref+=index.at(ui->listView->indexAt(QPoint(0,0)).row());
     qDebug()<<ref;
-    settings->setValue("lastribbon",ref);
+    settings.setValue("lastribbon",ref);
+
 
     this->close();
 }
@@ -698,14 +713,16 @@ void MainWindow::on_actionExit_triggered()
  *
  * @brief MainWindow::on_pushButton_4_clicked
  */
-void MainWindow::on_pushButton_4_clicked()
+void MainWindow::on_pushButton_4_clicked()                                                  //SAVE NOTE in TAB3
 {    
-    selNote_T3->note_date=today;
-    selNote_T3->text=ui->plainTextEdit_2->toPlainText();
-    selNote_T3->title=ui->lineEdit_2->text();
+    selNote_T3.note_date=today;
+    //selNote_T3.text=ui->plainTextEdit_2->toPlainText();
+    selNote_T3.text = ui->plainTextEdit_2->document()->toHtml();
+    selNote_T3.title=ui->lineEdit_2->text();
+    selNote_T3.editing = false;
 
-    dbhelper->updateNote(*selNote_T3);
-
+    dbhelper.updateNote(selNote_T3);
+    ui->pushButton_4->setEnabled(false);
 }
 
 
@@ -718,9 +735,9 @@ void MainWindow::on_pushButton_6_clicked()
                                   QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
         qDebug() << "YES was clicked";
-        dbhelper->deleteNote(*selNote_T3);
+        dbhelper.deleteNote(selNote_T3);
 
-        selNote_T3 = new Note();
+        selNote_T3 = Note();
 
         ui->plainTextEdit_2->clear();
         ui->lineEdit_2->clear();
@@ -742,7 +759,7 @@ void MainWindow::on_chapter_CBox_currentTextChanged(const QString &arg1)
     if (count>0){
         qDebug()<<arg1;
         QString book_sel = books_id.at(ui->book_CBox->currentIndex());
-        int num_verses = dbhelper->getNumVerses(book_sel, arg1);
+        int num_verses = dbhelper.getNumVerses(book_sel, arg1);
         verses.clear();
         for (int i=1; i<=num_verses; i++){
             verses.push_back(QString::number(i));
@@ -756,11 +773,11 @@ void MainWindow::on_chapter_CBox_currentTextChanged(const QString &arg1)
 
 void MainWindow::on_pushButton_7_clicked()                                          //DELETE RIBBON SELECTED
 {
-    if (selNote_T1->ribbon){
-        selNote_T1->ribbon=false;
-        selNote_T1->ribbon_date="";
-        selNote_T1->ribbon_title="";
-        dbhelper->updateNote(*selNote_T1);
+    if (selNote_T1.ribbon){
+        selNote_T1.ribbon=false;
+        selNote_T1.ribbon_date="";
+        selNote_T1.ribbon_title="";
+        dbhelper.updateNote(selNote_T1);
 
         QString book_id = books_id.at(ui->book_CBox->currentIndex());
         QString ref=book_id+"."+index.at(ui->listView->indexAt(QPoint(0,0)).row());
@@ -775,7 +792,7 @@ void MainWindow::on_book_CBox_currentIndexChanged(int index)
     static int count=0;
     if (count>0){
         qDebug()<<books_id.at(index);
-        int book_chaps = dbhelper->getNumChapters(books_id.at(index));
+        int book_chaps = dbhelper.getNumChapters(books_id.at(index));
         chapters.clear();
         for (int i=1; i<=book_chaps; i++){
             chapters.push_back(QString::number(i));
@@ -811,18 +828,18 @@ void MainWindow::on_pushButton_9_clicked()
 void MainWindow::print_T1(QPrinter *p)
 {
     QTextDocument document;
-    QString temp =ui->plainTextEdit->toPlainText();
-    temp.replace("\n\n","</p><p>");
-    temp.replace("\n","<br>");
+    //QString temp =ui->plainTextEdit->();
+    //temp.replace("\n\n","</p><p>");
+    //temp.replace("\n","<br>");
     QString html=
             "<div align=right>"
-                "Date:"+selNote_T1->note_date+"<br>"
+                "Date:"+selNote_T1.note_date+"<br>"
             "</div>"
             "<div align=left>"
-                "Ref.:"+selNote_T1->getRef()+"<br>"
+                "Ref.:"+selNote_T1.getRef()+"<br>"
             "</div>"
             "<H1 align=center>"+ui->lineEdit_3->text()+"</H1>"
-            "<p align=justify>"+temp+"</p>";
+            +selNote_T1.text;
     document.setHtml(html);
     document.print(p);
 }
@@ -830,18 +847,18 @@ void MainWindow::print_T1(QPrinter *p)
 void MainWindow::print_T3(QPrinter *p)
 {
     QTextDocument document;
-    QString temp =ui->plainTextEdit_2->toPlainText();
-    temp.replace("\n\n","</p><p>");
-    temp.replace("\n","<br>");
+    //QString temp =ui->plainTextEdit_2->toPlainText();
+    //temp.replace("\n\n","</p><p>");
+    //temp.replace("\n","<br>");
     QString html=
             "<div align=right>"
-                "Date:"+ui->label_12->text()+"<br>"
+                "Date:"+selNote_T3.note_date+"<br>"
             "</div>"
             "<div align=left>"
-                "Ref.:"+ui->label_14->text()+"<br>"
+                "Ref.:"+selNote_T3.getRef()+"<br>"
             "</div>"
-            "<H1 align=center>"+ui->lineEdit_2->text()+"</H1>"
-            "<p align=justify>"+temp+"</p>";
+            "<H1 align=center>"+selNote_T3.title+"</H1>"
+            +selNote_T3.text;
     document.setHtml(html);
     document.print(p);
 }
@@ -865,7 +882,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     {
         if(event->type() == QKeyEvent::KeyPress)
         {
-            selNote_T1->editing=true;
+            selNote_T1.editing=true;
             ui->label_16->setText(tr("not saved"));
             ui->pushButton_3->setEnabled(true);
             //QKeyEvent * ke = static_cast<QKeyEvent*>(event);
@@ -875,6 +892,15 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             //}
         }
         return false; // process this event further
+    }
+    else if (watched == ui->plainTextEdit_2)
+    {
+        if(event->type() == QKeyEvent::KeyPress)
+        {
+            selNote_T3.editing=true;
+            ui->pushButton_4->setEnabled(true);
+        }
+        return false;
     }
     else
     {
@@ -889,8 +915,8 @@ void MainWindow::on_actionNotes_file_location_triggered()
     path_notes = QFileDialog::getExistingDirectory (this, tr("Directory"), path_notes);
     if ( path_notes.isNull() == false )
     {
-        settings->setValue("path_notes",path_notes);
-        dbhelper = new DBHelper(path_bibles,path_notes,version);
+        settings.setValue("path_notes",path_notes);
+        dbhelper = DBHelper(path_notes,version);
         ui->pushButton->click();
     }
 }
@@ -898,19 +924,19 @@ void MainWindow::on_actionNotes_file_location_triggered()
 
 void MainWindow::on_pushButton_13_clicked()
 {
-    if (!selNote_T1->ribbon){
+    if (!selNote_T1.ribbon){
         bool ok;
         QString text = QInputDialog::getText(0, tr("New ribbon"),
                                                 tr("Ribbon title:"), QLineEdit::Normal,
                                                 "", &ok);
         if (ok){
-            selNote_T1->ribbon_title=text;
-            selNote_T1->ribbon_date=today;
-            selNote_T1->ribbon=true;
-            if (selNote_T1->id==0)
-                selNote_T1->id=dbhelper->insertNote(*selNote_T1);
+            selNote_T1.ribbon_title=text;
+            selNote_T1.ribbon_date=today;
+            selNote_T1.ribbon=true;
+            if (selNote_T1.id==0)
+                selNote_T1.id=dbhelper.insertNote(selNote_T1);
             else
-                dbhelper->updateNote(*selNote_T1);
+                dbhelper.updateNote(selNote_T1);
 
             QString book_id = books_id.at(ui->book_CBox->currentIndex());
             QString ref=book_id+"."+index.at(ui->listView->indexAt(QPoint(0,0)).row());
@@ -930,7 +956,7 @@ void MainWindow::on_pushButton_13_clicked()
 
 void MainWindow::on_pushButton_11_clicked()                                                     //UPDATE IN TAB4
 {
-    allNotes_T4 = dbhelper->getAllRibbons();
+    allNotes_T4 = dbhelper.getAllRibbons();
     std::sort(allNotes_T4.begin(), allNotes_T4.end(), compareFunction_ribbontitle);
 
     //LOAD NOTES MANAGER LIST
@@ -965,7 +991,6 @@ void MainWindow::on_pushButton_11_clicked()                                     
 
 }
 
-
 void MainWindow::on_pushButton_12_clicked()
 {
     QString ref = allNotes_T4[ui->listView_4->currentIndex().row()].getRef();
@@ -974,5 +999,166 @@ void MainWindow::on_pushButton_12_clicked()
     ui->pushButton->click();
 
     ui->tabWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_pushButton_16_clicked()
+{
+    QTextCursor cursor = ui->plainTextEdit->textCursor();
+    if (cursor.hasSelection()){
+        QTextCharFormat format;
+        if (!cursor.charFormat().font().bold()){
+            format.setFontWeight(QFont::Bold);
+
+        }
+        else{
+            format.setFontWeight(QFont::Normal);
+        }
+        cursor.mergeCharFormat(format);
+
+        selNote_T1.editing = true;
+        ui->label_16->setText(tr("not saved"));
+        ui->pushButton_3->setEnabled(true);
+    }
+}
+
+void MainWindow::on_pushButton_17_clicked()
+{
+    QTextCursor cursor = ui->plainTextEdit->textCursor();
+    if (cursor.hasSelection()){
+        QTextCharFormat format;
+        if (!cursor.charFormat().font().italic()){
+            format.setFontItalic(true);
+
+        }
+        else{
+            format.setFontItalic(false);
+        }
+        cursor.mergeCharFormat(format);
+
+        selNote_T1.editing = true;
+        ui->label_16->setText(tr("not saved"));
+        ui->pushButton_3->setEnabled(true);
+    }
+}
+
+void MainWindow::on_pushButton_18_clicked()
+{
+    QTextCursor cursor = ui->plainTextEdit->textCursor();
+    if (cursor.hasSelection()){
+        QTextCharFormat format;
+        if (!cursor.charFormat().font().underline()){
+            format.setFontUnderline(true);
+
+        }
+        else{
+            format.setFontUnderline(false);
+        }
+        cursor.mergeCharFormat(format);
+
+        selNote_T1.editing = true;
+        ui->label_16->setText(tr("not saved"));
+        ui->pushButton_3->setEnabled(true);
+    }
+}
+
+
+void MainWindow::on_pushButton_19_clicked()
+{
+    QTextCursor cursor = ui->plainTextEdit_2->textCursor();
+    if (cursor.hasSelection()){
+        QTextCharFormat format;
+        if (!cursor.charFormat().font().bold()){
+            format.setFontWeight(QFont::Bold);
+
+        }
+        else{
+            format.setFontWeight(QFont::Normal);
+        }
+        cursor.mergeCharFormat(format);
+
+        selNote_T3.editing = true;
+        ui->pushButton_4->setEnabled(true);
+    }
+}
+
+
+void MainWindow::on_pushButton_20_clicked()
+{
+    QTextCursor cursor = ui->plainTextEdit_2->textCursor();
+    if (cursor.hasSelection()){
+        QTextCharFormat format;
+        if (!cursor.charFormat().font().italic()){
+            format.setFontItalic(true);
+
+        }
+        else{
+            format.setFontItalic(false);
+        }
+        cursor.mergeCharFormat(format);
+
+        selNote_T3.editing = true;
+        ui->pushButton_4->setEnabled(true);
+    }
+}
+
+
+void MainWindow::on_pushButton_21_clicked()
+{
+    QTextCursor cursor = ui->plainTextEdit_2->textCursor();
+    if (cursor.hasSelection()){
+        QTextCharFormat format;
+        if (!cursor.charFormat().font().underline()){
+            format.setFontUnderline(true);
+
+        }
+        else{
+            format.setFontUnderline(false);
+        }
+        cursor.mergeCharFormat(format);
+
+        selNote_T3.editing = true;
+        ui->pushButton_4->setEnabled(true);
+    }
+}
+
+
+void MainWindow::on_pushButton_22_clicked()
+{
+    QTextCursor cursor = ui->plainTextEdit->textCursor();
+    if (cursor.hasSelection()){
+        QTextCharFormat format;
+        if (cursor.charFormat().background().color()!=yellow){
+            format.setBackground(yellow);
+
+        }
+        else{
+            format.setBackground(QColor(Qt::transparent));
+        }
+        cursor.mergeCharFormat(format);
+
+        selNote_T1.editing = true;
+        ui->label_16->setText(tr("not saved"));
+        ui->pushButton_3->setEnabled(true);
+    }
+}
+
+
+void MainWindow::on_pushButton_23_clicked()
+{
+    QTextCursor cursor = ui->plainTextEdit_2->textCursor();
+    if (cursor.hasSelection()){
+        QTextCharFormat format;
+        if (cursor.charFormat().background().color()!=yellow){
+            format.setBackground(yellow);
+
+        }
+        else{
+            format.setBackground(QColor(Qt::transparent));
+        }
+        cursor.mergeCharFormat(format);
+
+        selNote_T3.editing = true;
+        ui->pushButton_4->setEnabled(true);
+    }
 }
 

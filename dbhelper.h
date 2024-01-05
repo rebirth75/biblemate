@@ -9,7 +9,7 @@ class DBHelper
 {
 public:
     DBHelper();
-    DBHelper(QString path_bibles, QString path_note, QString version);
+    DBHelper(QString path_note, QString version);
     int getNumChapters(QString book_id);
     int getNumVerses(QString book_id, QString chapter);
     Book GetBook(QString vers, QString book_id);

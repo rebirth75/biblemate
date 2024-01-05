@@ -8,6 +8,7 @@
 #include <QStringListModel>
 #include <QListView>
 #include <QString>
+#include <QDebug>
 
 #include "dbhelper.h"
 
@@ -33,7 +34,9 @@ int main(int argc, char *argv[])
 
 
     MainWindow w;
+    qDebug() << "Set MainWindow";
     w.show();
+    qDebug() << "Show MainWindow";
 
     return app.exec();
 }
