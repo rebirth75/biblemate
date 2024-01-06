@@ -54,15 +54,15 @@ DISTFILES += \
     BibleMate_es_ES.ts \
     BibleMate_fr_FR.ts \
     BibleMate_ru_RU.ts \
-    bibles/cei2008.db \
-    bibles/diodati.db \
-    bibles/kingjamesversion.db \
-    bibles/newinternationalversionus.db \
-    bibles/newkingjamesversion.db \
-    bibles/nuovadiodati.db \
-    bibles/nuovariveduta.db \
-    bibles/reinavalera.db \
-    bibles/synodal.db
+#    bibles/cei2008.db \
+#    bibles/diodati.db \
+#    bibles/kingjamesversion.db \
+#    bibles/newinternationalversionus.db \
+#    bibles/newkingjamesversion.db \
+#    bibles/nuovadiodati.db \
+#    bibles/nuovariveduta.db \
+#    bibles/reinavalera.db \
+#    bibles/synodal.db
 #    img/bible.png \
 #    img/bible2.png \
 #    img/exit.png \

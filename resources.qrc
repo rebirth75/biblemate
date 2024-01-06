@@ -23,4 +23,15 @@
         <file>img/print.png</file>
         <file>img/highlight.png</file>
     </qresource>
+    <qresource prefix="/bibles">
+        <file>bibles/synodal.db</file>
+        <file>bibles/reinavalera.db</file>
+        <file>bibles/nuovariveduta.db</file>
+        <file>bibles/nuovadiodati.db</file>
+        <file>bibles/newkingjamesversion.db</file>
+        <file>bibles/newinternationalversionus.db</file>
+        <file>bibles/kingjamesversion.db</file>
+        <file>bibles/diodati.db</file>
+        <file>bibles/cei2008.db</file>
+    </qresource>
 </RCC>
