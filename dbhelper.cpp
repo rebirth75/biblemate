@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
+#include <QApplication>
 
 DBHelper::DBHelper()
 {
@@ -15,16 +16,17 @@ DBHelper::DBHelper()
 
 DBHelper::DBHelper(const QString path_notes, QString version)
 {
-    QString localpath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    /*QString localpath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     if (!QDir(localpath).exists())
         QDir().mkdir(localpath);
-
     if (!QFile::exists(localpath+"/"+version+".db")){
         //QFile res_db(":/bibles/"+version+".db");
         const QString local_db = localpath+"/"+version+".db";
         const QString res_db = ":/bibles/bibles/"+version+".db";
         qDebug()<< "Bible_DB copied: " << QFile::copy(res_db,local_db);
-    }
+    }*/
+
+    QString localpath = QApplication::applicationDirPath()+"/bibles";
 
     m_db = QSqlDatabase::addDatabase("QSQLITE", "bible");
     //m_db.setDatabaseName(path_bibles+"/"+version+".db");
