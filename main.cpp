@@ -15,6 +15,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    //app.setWindowIcon(QIcon(":/res/img/ic_launcher.png"));
 
     QTranslator translator;
 
@@ -34,6 +35,8 @@ int main(int argc, char *argv[])
 
 
     MainWindow w;
+    //w.setWindowIcon(QIcon(":/res/img/ic_launcher.png"));
+
     qDebug() << "Set MainWindow";
     w.show();
     qDebug() << "Show MainWindow";

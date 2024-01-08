@@ -16,17 +16,23 @@ DBHelper::DBHelper()
 
 DBHelper::DBHelper(const QString path_notes, QString version)
 {
-    /*QString localpath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString localpath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     if (!QDir(localpath).exists())
         QDir().mkdir(localpath);
+    if (QFile::exists(localpath+"/"+version+".db")){
+        QFile local_db_file(localpath+"/"+version+".db");
+        if (local_db_file.size()<4000){
+            local_db_file.remove();
+        }
+    }
     if (!QFile::exists(localpath+"/"+version+".db")){
         //QFile res_db(":/bibles/"+version+".db");
         const QString local_db = localpath+"/"+version+".db";
-        const QString res_db = ":/bibles/bibles/"+version+".db";
+        const QString res_db = ":/res/bibles/"+version+".db";
         qDebug()<< "Bible_DB copied: " << QFile::copy(res_db,local_db);
-    }*/
+    }
 
-    QString localpath = QApplication::applicationDirPath()+"/bibles";
+    //QString localpath = QApplication::applicationDirPath()+"/bibles";
 
     m_db = QSqlDatabase::addDatabase("QSQLITE", "bible");
     //m_db.setDatabaseName(path_bibles+"/"+version+".db");
