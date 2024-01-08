@@ -350,6 +350,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_9">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Print note</string>
                 </property>
@@ -471,6 +474,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_8">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Open in Reading</string>
             </property>
@@ -819,6 +825,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_10">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Print note</string>
                 </property>
@@ -893,6 +902,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_15">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Edit title</string>
             </property>
@@ -900,6 +912,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_14">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Del Ribbon</string>
             </property>
@@ -907,6 +922,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_12">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Open in reading</string>
             </property>
@@ -959,6 +977,7 @@
      <addaction name="actionNuova_Riveduta"/>
      <addaction name="actionDiodati"/>
      <addaction name="actionSynodal"/>
+     <addaction name="actionReina_Valera"/>
     </widget>
     <addaction name="menuBible_version"/>
     <addaction name="menuFont_size"/>
@@ -1134,6 +1153,18 @@
   <action name="actionNotes_file_location">
    <property name="text">
     <string>Path of notes file</string>
+   </property>
+  </action>
+  <action name="actionReina_Valera">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/img/sp.png</normaloff>:/res/img/sp.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reina Valera</string>
    </property>
   </action>
  </widget>

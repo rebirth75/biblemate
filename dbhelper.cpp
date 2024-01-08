@@ -103,8 +103,8 @@ Book DBHelper::GetBook(QString version, QString book_id)
     query.bindValue(":book_id", book_id);
 
     qDebug() << "GetBook query" << query.exec();
-    qDebug() << query.lastError();
-    qDebug() << query.executedQuery();
+    //qDebug() << query.lastError();
+    //qDebug() << query.executedQuery();
 
     while (query.next())
     {
@@ -245,8 +245,8 @@ int DBHelper::insertNote(Note note){
     sql.bindValue(":ribbon", note.ribbon);
 
     qDebug() << "InsertNote" << sql.exec();
-    qDebug() << sql.lastError();
-    qDebug() << sql.executedQuery();
+    //qDebug() << sql.lastError();
+    //qDebug() << sql.executedQuery();
 
     return  sql.lastInsertId().toInt();
 }
@@ -266,8 +266,8 @@ bool DBHelper::updateNote(Note note){
     sql.bindValue(":id", note.id);
 
     qDebug() << "UpdateNote" << sql.exec();
-    qDebug() << sql.lastError();
-    qDebug() << sql.executedQuery();
+    //qDebug() << sql.lastError();
+    //qDebug() << sql.executedQuery();
 
     return  true;
 }
@@ -279,8 +279,8 @@ bool DBHelper::deleteNote(Note note){
     sql.bindValue(":id", note.id);
 
     qDebug() << "DeleteNote" << sql.exec();
-    qDebug() << sql.lastError();
-    qDebug() << sql.executedQuery();
+    //qDebug() << sql.lastError();
+    //qDebug() << sql.executedQuery();
 
     return  true;
 }
@@ -354,8 +354,8 @@ std::vector<Verse> DBHelper::searchText(QStringList texts, bool exact)
         query.bindValue(":text1", QString("%%1%").arg(texts[0]));
     }
     qDebug() << "SearchText" << query.exec();
-    qDebug() << query.lastError();
-    qDebug() << query.executedQuery();
+    //qDebug() << query.lastError();
+    //qDebug() << query.executedQuery();
     while (query.next())
     {
         QString stemp = query.value(1).toString();

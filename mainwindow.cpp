@@ -23,7 +23,7 @@ QDateTime date = QDateTime::currentDateTime();
 QString today = date.toString("yyyy.MM.dd");
 QSettings settings("Mate-Solutions", "Bible-Mate");
 DBHelper dbhelper;
-Note selNote_T1, selNote_T3;
+Note selNote_T1, selNote_T3, selNote_T4;
 const QColor yellow	( 255, 255,   0 );
 
 QStringList books_id = {
@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     setComboBox(lastribbon);
 
-    qDebug() << "Step 1";
+    //qDebug() << "Step 1";
     QActionGroup* group = new QActionGroup( this );
     group->setExclusive(true);
     ui->action14->setActionGroup(group);
@@ -73,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->action20->setActionGroup(group);
     ui->action22->setActionGroup(group);
 
-    qDebug() << "Step 2";
+    //qDebug() << "Step 2";
     QActionGroup* groupB = new QActionGroup( this );
     groupB->setExclusive(true);
     ui->actionNuova_Diodati->setActionGroup(groupB);
@@ -84,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->actionNew_King_James->setActionGroup(groupB);
     ui->actionNuova_Riveduta->setActionGroup(groupB);
     ui->actionSynodal->setActionGroup(groupB);
+    ui->actionReina_Valera->setActionGroup(groupB);
 
     switch (fontsize){
         case 14: ui->action14->setChecked(true);
@@ -98,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         break;
     }
 
-    qDebug() << "Step 3";
+    //qDebug() << "Step 3";
     if (version=="nuovadiodati") ui->actionNuova_Diodati->setChecked(true);
     else if (version=="newinternationalversionus") ui->actionNew_International->setChecked(true);
     else if (version=="nuovariveduta") ui->actionNuova_Riveduta->setChecked(true);
@@ -107,11 +108,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     else if (version=="kingjamesversion") ui->actionKing_James->setChecked(true);
     else if (version=="newkingjamesversion") ui->actionNew_King_James->setChecked(true);
     else if (version=="synodal") ui->actionSynodal->setChecked(true);
-
+    else if (version=="reinavalera") ui->actionReina_Valera->setChecked(true);
 
     //ui->pushButton->click();
     ui->pushButton_7->setEnabled(false);
-    qDebug() << "Step 4";
+    //qDebug() << "Step 4";
 }
 
 MainWindow::~MainWindow()
@@ -190,9 +191,10 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
         selNote_T1.chap = index.at(current.row()).split(":")[0].toInt();
         selNote_T1.verse = index.at(current.row()).split(":")[1].toInt();
         selNote_T1.editing = false;
+
         for (Note note:allNotes_T1){
             if (note.chap==selNote_T1.chap && note.verse==selNote_T1.verse){
-                //selNote = &note;
+
                 selNote_T1.id =note.id;
                 selNote_T1.text = note.text;
                 selNote_T1.title = note.title;
@@ -203,10 +205,17 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
                 ui->lineEdit_3->setText(selNote_T1.title);
                 //ui->plainTextEdit->setPlainText(selNote_T1.text);
                 ui->plainTextEdit->appendHtml(selNote_T1.text);
-                selNote_T1.editing = note.editing;
+                selNote_T1.editing = note.editing;                
+
                 break;
             }
         }
+
+        if (ui->plainTextEdit->toPlainText()!="" || ui->lineEdit_3->text()!="")
+            ui->pushButton_9->setEnabled(true);
+        else
+            ui->pushButton_9->setEnabled(false);
+
         if (selNote_T1.editing){
             ui->label_16->setText(tr("not saved"));
             ui->pushButton_3->setEnabled(true);
@@ -219,11 +228,6 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
 
     ui->pushButton_7->setEnabled(true);
     ui->pushButton_13->setEnabled(true);
-}
-
-void MainWindow::Update_tab4(const QModelIndex &current, const QModelIndex &previous)   //SELECT A RIBBON IN TAB4
-{
-    qDebug() << "changed" << "current" << current.row() << "previous" << previous.row();
 }
 
 /**
@@ -245,12 +249,28 @@ void MainWindow::Update_tab3(const QModelIndex &current, const QModelIndex &prev
     ui->plainTextEdit_2->appendHtml(selNote_T3.text);
     ui->label_12->setText(selNote_T3.note_date);
     ui->label_14->setText(selNote_T3.getRef());
+
     ui->pushButton_6->setEnabled(true);
+    ui->pushButton_10->setEnabled(true);
+}
+
+void MainWindow::Update_tab4(const QModelIndex &current, const QModelIndex &previous)   //SELECT A NOTE IN TAB4
+{
+    qDebug() << "changed" << "current" << current.row() << "previous" << previous.row();
+
+    selNote_T4 = allNotes_T4[current.row()];
+
+    ui->pushButton_12->setEnabled(true);
+    ui->pushButton_14->setEnabled(true);
+    ui->pushButton_15->setEnabled(true);
+
 }
 
 void MainWindow::Update_tab2(const QModelIndex &current, const QModelIndex &previous)   //SELECT A VERSE IN TAB2
 {
     qDebug() << "changed" << "current" << results[current.row()].getRef() << "previous" << previous.row();
+
+    ui->pushButton_8->setEnabled(true);
 
 }
 
@@ -378,6 +398,7 @@ void MainWindow::on_pushButton_clicked()                                        
 
     ui->pushButton_7->setEnabled(false);
     ui->pushButton_3->setEnabled(false);
+    ui->pushButton_9->setEnabled(false);
 }
 
 /**
@@ -439,32 +460,39 @@ void MainWindow::on_pushButton_3_clicked()                                      
 void MainWindow::on_pushButton_2_clicked()                                                      //SEARCH TEXT IN TAB2
 {
     QString temp=ui->lineEdit->text();
-    QStringList templist = temp.split(" ");
-    results=dbhelper.searchText(templist, ui->checkBox->isChecked());
 
-    ui->label_8->setText(QString("%1").arg(results.size()));
+    if (temp!=""){
 
-    QStandardItemModel *model_tab2 = new QStandardItemModel();
+        QStringList templist = temp.split(" ");
+        results=dbhelper.searchText(templist, ui->checkBox->isChecked());
 
-    ListViewDelegate_2 *listdelegate_tab2;
-    listdelegate_tab2 = new ListViewDelegate_2(16,19);
+        ui->label_8->setText(QString("%1").arg(results.size()));
 
-    ui->listView_2->setItemDelegate(listdelegate_tab2);
-    ui->listView_2->setModel(model_tab2);
+        QStandardItemModel *model_tab2 = new QStandardItemModel();
 
-    for (Verse verse:results){
-        QStandardItem *item = new QStandardItem();
+        ListViewDelegate_2 *listdelegate_tab2;
+        listdelegate_tab2 = new ListViewDelegate_2(16,19);
 
-        item->setData("\n",ListViewDelegate_2::HeaderRole);
-        QString temp = QString(verse.text+" ("+verse.book+".%1:%2)\n").arg(verse.chap).arg(verse.verse_num);
-        temp=temp.replace("<em>","").replace("</em>","");
+        ui->listView_2->setItemDelegate(listdelegate_tab2);
+        ui->listView_2->setModel(model_tab2);
 
-        item->setData(temp,ListViewDelegate_2::SubheaderRole);
-        model_tab2->appendRow(item);
+        for (Verse verse:results){
+            QStandardItem *item = new QStandardItem();
+
+            item->setData("\n",ListViewDelegate_2::HeaderRole);
+            QString temp = QString(verse.text+" ("+verse.book+".%1:%2)\n").arg(verse.chap).arg(verse.verse_num);
+            temp=temp.replace("<em>","").replace("</em>","");
+
+            item->setData(temp,ListViewDelegate_2::SubheaderRole);
+            model_tab2->appendRow(item);
+        }
+
+        selectionModel = ui->listView_2->selectionModel();
+        connect(selectionModel, &QItemSelectionModel::currentChanged, this, &MainWindow::Update_tab2);
+
+        ui->pushButton_8->setEnabled(false);
     }
 
-    selectionModel = ui->listView_2->selectionModel();
-    connect(selectionModel, &QItemSelectionModel::currentChanged, this, &MainWindow::Update_tab2);
 }
 
 /**
@@ -556,6 +584,9 @@ void MainWindow::on_pushButton_5_clicked()                                      
     ui->plainTextEdit_2->clear();
     ui->label_12->setText("[date]");
     ui->label_14->setText("[ref]");
+
+    ui->pushButton_6->setEnabled(false);
+    ui->pushButton_10->setEnabled(false);
 }
 
 
@@ -990,6 +1021,10 @@ void MainWindow::on_pushButton_11_clicked()                                     
         model_tab4->appendRow(item);
     }
 
+    ui->pushButton_12->setEnabled(false);
+    ui->pushButton_14->setEnabled(false);
+    ui->pushButton_15->setEnabled(false);
+
 }
 
 void MainWindow::on_pushButton_12_clicked()
@@ -1161,5 +1196,31 @@ void MainWindow::on_pushButton_23_clicked()
         selNote_T3.editing = true;
         ui->pushButton_4->setEnabled(true);
     }
+}
+
+
+void MainWindow::on_pushButton_15_clicked()
+{
+    bool ok;
+    QString text = QInputDialog::getText(0, tr("Edit ribbon"),
+                                            tr("Ribbon title:"), QLineEdit::Normal,
+                                            selNote_T4.ribbon_title, &ok);
+    if (ok){
+        selNote_T4.ribbon_title=text;
+        selNote_T4.ribbon_date=today;
+        dbhelper.updateNote(selNote_T4);
+
+        ui->pushButton_11->click();
+    }
+}
+
+
+void MainWindow::on_actionReina_Valera_triggered()
+{
+    version="reinavalera";
+    settings.setValue("version","reinavalera");
+
+    dbhelper = DBHelper(path_notes,version);
+    ui->pushButton->click();
 }
 

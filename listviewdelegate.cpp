@@ -50,10 +50,12 @@ QSize ListViewDelegate::sizeHint(const QStyleOptionViewItem &  option ,
     QString verse = subheaderText.split(" ")[0];
     QString text_no_verse = subheaderText.remove(verse+" ");
 
+    /*
     QRect subheaderRect1 = subheaderFm.boundingRect(0, 0,
                                                    30, 0,
                                                    Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,
                                                    verse);
+    */
     QRect subheaderRect2 = subheaderFm.boundingRect(0, 0,
                                                    option.rect.width() - iconSize.width()-30, 0,
                                                    Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,

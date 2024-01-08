@@ -117,6 +117,10 @@ private slots:
 
     void on_pushButton_23_clicked();
 
+    void on_pushButton_15_clicked();
+
+    void on_actionReina_Valera_triggered();
+
 private:
     Ui::MainWindow          *ui;
     QStringListModel        *m_Model;

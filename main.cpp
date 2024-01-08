@@ -37,9 +37,9 @@ int main(int argc, char *argv[])
     MainWindow w;
     //w.setWindowIcon(QIcon(":/res/img/ic_launcher.png"));
 
-    qDebug() << "Set MainWindow";
+    //qDebug() << "Set MainWindow";
     w.show();
-    qDebug() << "Show MainWindow";
+    //qDebug() << "Show MainWindow";
 
     return app.exec();
 }
