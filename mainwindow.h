@@ -121,6 +121,12 @@ private slots:
 
     void on_actionReina_Valera_triggered();
 
+    void on_actionAmerican_Standard_triggered();
+
+    void on_actionPortuguese_triggered();
+
+    void on_actionSagratas_Escrituras_triggered();
+
 private:
     Ui::MainWindow          *ui;
     QStringListModel        *m_Model;

@@ -120,6 +120,8 @@ Book DBHelper::GetBook(QString version, QString book_id)
         verse.text = stemp;
         stemp = query.value(6).toString();
         verse.title = stemp;
+        stemp = query.value(7).toString();
+        verse.link = stemp;
         book.addVerse(verse);
     }
     return book;

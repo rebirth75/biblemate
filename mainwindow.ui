@@ -163,6 +163,24 @@
             <item>
              <widget class="QListView" name="listView"/>
             </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_18">
+              <item>
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string>References:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="lineEdit_5">
+                <property name="readOnly">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
            </layout>
           </widget>
           <widget class="QFrame" name="frame_2">
@@ -970,14 +988,17 @@
       <string>Bible version</string>
      </property>
      <addaction name="actionNuova_Diodati"/>
+     <addaction name="actionNuova_Riveduta"/>
+     <addaction name="actionDiodati"/>
+     <addaction name="actionCEI_2008"/>
      <addaction name="actionNew_International"/>
      <addaction name="actionKing_James"/>
      <addaction name="actionNew_King_James"/>
-     <addaction name="actionCEI_2008"/>
-     <addaction name="actionNuova_Riveduta"/>
-     <addaction name="actionDiodati"/>
+     <addaction name="actionAmerican_Standard"/>
      <addaction name="actionSynodal"/>
      <addaction name="actionReina_Valera"/>
+     <addaction name="actionSagratas_Escrituras"/>
+     <addaction name="actionPortuguese"/>
     </widget>
     <addaction name="menuBible_version"/>
     <addaction name="menuFont_size"/>
@@ -1165,6 +1186,42 @@
    </property>
    <property name="text">
     <string>Reina Valera</string>
+   </property>
+  </action>
+  <action name="actionAmerican_Standard">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/img/us.png</normaloff>:/res/img/us.png</iconset>
+   </property>
+   <property name="text">
+    <string>American Standard</string>
+   </property>
+  </action>
+  <action name="actionPortuguese">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/img/po.png</normaloff>:/res/img/po.png</iconset>
+   </property>
+   <property name="text">
+    <string>Portuguese</string>
+   </property>
+  </action>
+  <action name="actionSagratas_Escrituras">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/img/sp.png</normaloff>:/res/img/sp.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sagradas Escrituras</string>
    </property>
   </action>
  </widget>

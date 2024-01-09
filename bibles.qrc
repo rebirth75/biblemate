@@ -9,5 +9,10 @@
         <file>bibles/kingjamesversion.db</file>
         <file>bibles/diodati.db</file>
         <file>bibles/cei2008.db</file>
+        <file>bibles/sagradasescrituras.db</file>
+        <file>bibles/port.db</file>
+        <file>bibles/niv1984.db</file>
+        <file>bibles/elberfelder.db</file>
+        <file>bibles/americanstandardversion.db</file>
     </qresource>
 </RCC>

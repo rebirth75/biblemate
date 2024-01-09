@@ -17,14 +17,17 @@
 #include <QStandardPaths>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QClipboard>
 
-QString app_release = "0.1.2";
+QString app_release = "0.1.4";
 QDateTime date = QDateTime::currentDateTime();
 QString today = date.toString("yyyy.MM.dd");
 QSettings settings("Mate-Solutions", "Bible-Mate");
 DBHelper dbhelper;
 Note selNote_T1, selNote_T3, selNote_T4;
+Verse selVerse;
 const QColor yellow	( 255, 255,   0 );
+
 
 QStringList books_id = {
     "Gen","Exod","Lev","Num","Deut","Josh","Judg","Ruth","1Sam","2Sam",
@@ -41,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
     ui->plainTextEdit->installEventFilter(this);
     ui->plainTextEdit_2->installEventFilter(this);
+    ui->lineEdit_5->installEventFilter(this);
+    ui->listView->installEventFilter(this);
 
     books_name = QStringList({
        tr("Genesis"),tr("Exodus"),tr("Leviticus"),tr("Numbers"),tr("Deuteronomy"),tr("Joshua"),tr("Judges"),tr("Ruth"),tr("1 Samuel"),tr("2 Samuel"),
@@ -85,6 +90,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->actionNuova_Riveduta->setActionGroup(groupB);
     ui->actionSynodal->setActionGroup(groupB);
     ui->actionReina_Valera->setActionGroup(groupB);
+    ui->actionAmerican_Standard->setActionGroup(groupB);
+    ui->actionPortuguese->setActionGroup(groupB);
+    ui->actionSagratas_Escrituras->setActionGroup(groupB);
 
     switch (fontsize){
         case 14: ui->action14->setChecked(true);
@@ -109,6 +117,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     else if (version=="newkingjamesversion") ui->actionNew_King_James->setChecked(true);
     else if (version=="synodal") ui->actionSynodal->setChecked(true);
     else if (version=="reinavalera") ui->actionReina_Valera->setChecked(true);
+    else if (version=="americanstandardversion") ui->actionAmerican_Standard->setChecked(true);
+    else if (version=="port") ui->actionPortuguese->setChecked(true);
+    else if (version=="sagradasescrituras") ui->actionSagratas_Escrituras->setChecked(true);
 
     //ui->pushButton->click();
     ui->pushButton_7->setEnabled(false);
@@ -154,6 +165,11 @@ void MainWindow::setComboBox(QString ref)
  */
 void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &previous)       //SELECT A VERSE IN TAB1
 {
+    selVerse.text = book.verses.at(current.row()).text;
+    selVerse.book = book.verses.at(current.row()).book;
+    selVerse.chap = book.verses.at(current.row()).chap;
+    selVerse.verse_num = book.verses.at(current.row()).verse_num;
+
     if (!ui->checkBox_2->isChecked()){
 
         //if (ui->plainTextEdit->toPlainText()!=""||ui->lineEdit_3->text()!=""){
@@ -184,6 +200,8 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
         ui->lineEdit_3->clear();
 
         qDebug() << "changed" << "current" << current.row() << "(" << index.at(current.row()) << ")" << "previous" << previous.row();
+
+        ui->lineEdit_5->setText(book.verses.at(current.row()).link);
 
         selNote_T1 = Note();
         selNote_T1.id = 0;
@@ -910,7 +928,21 @@ void MainWindow::on_pushButton_10_clicked()
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    if(watched == ui->plainTextEdit)
+    if (watched == ui->listView){
+        if(event->type() == QKeyEvent::KeyPress)
+        {
+            QKeyEvent * ke = static_cast<QKeyEvent*>(event);
+            if(ke->matches(QKeySequence::Copy))
+            {
+                QClipboard *clipboard = QApplication::clipboard();
+                clipboard->setText(selVerse.text + " (" + selVerse.getRef()+")");
+                return true; // do not process this event further
+            }
+            return false;
+        }
+        return false;
+    }
+    else if(watched == ui->plainTextEdit)
     {
         if(event->type() == QKeyEvent::KeyPress)
         {
@@ -931,6 +963,17 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         {
             selNote_T3.editing=true;
             ui->pushButton_4->setEnabled(true);
+        }
+        return false;
+    }
+    else if (watched == ui->lineEdit_5){
+        if(event->type() == QKeyEvent::KeyPress){
+            QKeyEvent * ke = static_cast<QKeyEvent*>(event);
+            if(ke->key() == Qt::Key_Right || ke->key() == Qt::Key_Left || ke->key() == Qt::Key_End || ke->key() == Qt::Key_Home)
+            {
+                return false; // contune to process this event
+            }
+            return true;    // do not process this event further
         }
         return false;
     }
@@ -1219,6 +1262,36 @@ void MainWindow::on_actionReina_Valera_triggered()
 {
     version="reinavalera";
     settings.setValue("version","reinavalera");
+
+    dbhelper = DBHelper(path_notes,version);
+    ui->pushButton->click();
+}
+
+
+void MainWindow::on_actionAmerican_Standard_triggered()
+{
+    version="americanstandardversion";
+    settings.setValue("version","americanstandardversion");
+
+    dbhelper = DBHelper(path_notes,version);
+    ui->pushButton->click();
+}
+
+
+void MainWindow::on_actionPortuguese_triggered()
+{
+    version="port";
+    settings.setValue("version","port");
+
+    dbhelper = DBHelper(path_notes,version);
+    ui->pushButton->click();
+}
+
+
+void MainWindow::on_actionSagratas_Escrituras_triggered()
+{
+    version="sagradasescrituras";
+    settings.setValue("version","sagradasescrituras");
 
     dbhelper = DBHelper(path_notes,version);
     ui->pushButton->click();
