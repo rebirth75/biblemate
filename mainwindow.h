@@ -148,6 +148,5 @@ private:
     void setComboBox(QString ref);
     bool eventFilter(QObject *watched, QEvent *event);
 
-    QTextToSpeech *m_speech;
 };
 #endif // MAINWINDOW_H
