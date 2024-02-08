@@ -11,6 +11,9 @@
 #include <QPrintPreviewDialog>
 #include <QTextDocument>
 #include <QPrinter>
+#include "worker.h"
+#include "bible_version.h"
+#include "QProgressBar"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -44,10 +47,6 @@ private slots:
 
     void on_pushButton_5_clicked();
 
-    void on_actionNuova_Diodati_triggered();
-
-    void on_actionNew_International_triggered();
-
     void on_action22_triggered();
 
     void on_action20_triggered();
@@ -60,25 +59,13 @@ private slots:
 
     void on_actionAbout_triggered();
 
-    void on_actionKing_James_triggered();
-
-    void on_actionNew_King_James_triggered();
-
-    void on_actionCEI_2008_triggered();
-
-    void on_actionNuova_Riveduta_triggered();
-
-    void on_actionDiodati_triggered();
-
-    void on_actionSynodal_triggered();
-
     void on_actionExit_triggered();
 
     void on_pushButton_4_clicked();
 
     void on_pushButton_6_clicked();
 
-    void on_chapter_CBox_currentTextChanged(const QString &arg1);
+    void on_chapter_CBox_currentIndexChanged(int index);
 
     void on_pushButton_7_clicked();
 
@@ -119,26 +106,35 @@ private slots:
 
     void on_pushButton_15_clicked();
 
-    void on_actionReina_Valera_triggered();
+    void on_pushButton_24_clicked();
 
-    void on_actionAmerican_Standard_triggered();
+    void executeWhenVisible();
 
-    void on_actionPortuguese_triggered();
+    void on_actionImport_Osis_XML_Bible_triggered();
 
-    void on_actionSagratas_Escrituras_triggered();
+    void on_version_CBox_currentIndexChanged(int index);
+
+    void on_select_clicked();
+    void on_import_clicked();
+    void on_cancel_clicked();
+    void on_work_finished();
+
+    void on_player_finished();
+
+    void on_pushButton_25_clicked();
 
 private:
     Ui::MainWindow          *ui;
     QStringListModel        *m_Model;
     QItemSelectionModel     *selectionModel;
 //    DBHelper                *dbhelper;
-    Book                    book;
-
+    Book                    book;    
+    std::vector<Bible_version> bible_versions;
     std::vector<Note>       allNotes_T1, allNotes_T3, allNotes_T4;
     std::vector<QString>    index;
     std::vector<Verse>      results;
     QStringList             books_name;
-    QStringList             chapters, verses;
+
 //    Note                    *selNote_T1, *selNote_T3;
     int                     fontsize;
     QString                 version;
@@ -146,7 +142,11 @@ private:
     QString                 path_bibles, path_notes;
     QString                 lastribbon;
     void setComboBox(QString ref);
+    void addImportedBibles();
     bool eventFilter(QObject *watched, QEvent *event);
+    QThread * thread;
+    Worker * worker;
+    QProgressBar * pBar;
 
 };
 #endif // MAINWINDOW_H

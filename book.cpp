@@ -12,6 +12,35 @@ void Book::addVerse(Verse v)
      }
 }
 
+void Book::setChap_Vers(){
+    int chap=0;
+    for (int i=0;i<(int)this->verses.size();i++){
+        if (this->verses.at(i).chap==chap){
+            this->chap_vers.at(chap-1)++;
+        }
+        else{
+            chap++;
+            this->chap_vers.push_back(1);
+        }
+    }
+}
+
+std::vector<Verse> Book::getPassage(QString ref1, QString ref2){
+    int idx1=0;
+    int idx2=0;
+    for (int i=0; i<(int)this->verses.size();i++){
+        if (this->verses.at(i).getRef()==ref1)
+            idx1=i;
+        if (this->verses.at(i).getRef()==ref2)
+            idx2=i;
+    }
+    std::vector<Verse>temp;
+    for (int i=idx1; i<idx2+1;i++){
+        temp.push_back(this->verses.at(i));
+    }
+    return temp;
+}
+
 QStringList Book::getStringList()
 {
     QStringList stringList;

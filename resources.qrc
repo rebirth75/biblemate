@@ -7,14 +7,14 @@
         <file>img/note3.png</file>
         <file>img/note2.png</file>
         <file>img/update.png</file>
-        <file>img/po.png</file>
+        <file>img/pt.png</file>
         <file>img/ru.png</file>
         <file>img/us.png</file>
         <file>img/exit.png</file>
         <file>img/ic_launcher.png</file>
-        <file>img/sp.png</file>
+        <file>img/es.png</file>
         <file>img/note1.png</file>
-        <file>img/ita.png</file>
+        <file>img/it.png</file>
         <file>img/fontsize.png</file>
         <file>img/pen1.png</file>
         <file>img/save.png</file>
@@ -22,5 +22,23 @@
         <file>img/trash.png</file>
         <file>img/print.png</file>
         <file>img/highlight.png</file>
+        <file>img/speech.png</file>
+        <file>img/fr.png</file>
+        <file>img/de.png</file>
+        <file>img/gb.png</file>
+        <file>img/gift.png</file>
+        <file>img/speech2.png</file>
+        <file>img/stop.png</file>
+    </qresource>
+    <qresource prefix="/res/pictures">
+        <file>img/pic07.jpg</file>
+        <file>img/pic06.jpg</file>
+        <file>img/pic05.jpg</file>
+        <file>img/pic04.jpg</file>
+        <file>img/pic03.jpg</file>
+        <file>img/pic02.jpg</file>
+        <file>img/pic01.jpg</file>
+        <file>img/pic08.jpg</file>
+        <file>img/pic09.jpg</file>
     </qresource>
 </RCC>

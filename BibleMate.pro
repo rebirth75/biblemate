@@ -1,6 +1,7 @@
 QT += core gui \
       sql \
-      printsupport
+      printsupport \
+      multimedia
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -13,6 +14,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    bible_version.cpp \
     book.cpp \
     dbhelper.cpp \
     listviewdelegate.cpp \
@@ -21,9 +23,11 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     note.cpp \
-    verse.cpp
+    verse.cpp \
+    worker.cpp
 
 HEADERS += \
+    bible_version.h \
     book.h \
     dbhelper.h \
     listviewdelegate.h \
@@ -31,7 +35,8 @@ HEADERS += \
     listviewdelegate_4.h \
     mainwindow.h \
     note.h \
-    verse.h
+    verse.h \
+    worker.h
 
 FORMS += \
     mainwindow.ui
@@ -49,7 +54,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
+DISTFILES +=
 #    BibleMate_it_IT.ts \
 #    BibleMate_es_ES.ts \
 #    BibleMate_fr_FR.ts \
@@ -79,9 +84,15 @@ DISTFILES += \
 #    img/search.png \
 #    img/sp.png \
 #    img/update.png \
-#    img/us.png
+ #    img/us.png
 
 RESOURCES += \
     bibles.qrc \
     resources.qrc
 
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/./release/ -llibespeak.so.1.1.48
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/./debug/ -llibespeak.so.1.1.48
+#else:unix: LIBS += -L$$PWD/./ -llibespeak.so.1.1.48
+
+INCLUDEPATH += $$PWD/.
+DEPENDPATH += $$PWD/.

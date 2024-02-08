@@ -14,29 +14,28 @@ DBHelper::DBHelper()
 
 }
 
-DBHelper::DBHelper(const QString path_notes, QString version)
+DBHelper::DBHelper(const QString path_notes, Bible_version bible_version)
 {
     QString localpath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
     if (!QDir(localpath).exists())
         QDir().mkdir(localpath);
-    if (QFile::exists(localpath+"/"+version+".db")){
-        QFile local_db_file(localpath+"/"+version+".db");
+
+    if (QFile::exists(localpath+"/"+bible_version.filename)){
+        QFile local_db_file(localpath+"/"+bible_version.filename);
         if (local_db_file.size()<4000){
             local_db_file.remove();
         }
     }
-    if (!QFile::exists(localpath+"/"+version+".db")){
-        //QFile res_db(":/bibles/"+version+".db");
-        const QString local_db = localpath+"/"+version+".db";
-        const QString res_db = ":/res/bibles/"+version+".db";
+
+    if (!QFile::exists(localpath+"/"+bible_version.filename)){
+        const QString local_db = localpath+"/"+bible_version.filename;
+        const QString res_db = ":/res/bibles/"+bible_version.filename;
         qDebug()<< "Bible_DB copied: " << QFile::copy(res_db,local_db);
     }
 
-    //QString localpath = QApplication::applicationDirPath()+"/bibles";
-
     m_db = QSqlDatabase::addDatabase("QSQLITE", "bible");
-    //m_db.setDatabaseName(path_bibles+"/"+version+".db");
-    m_db.setDatabaseName(localpath+"/"+version+".db");
+    m_db.setDatabaseName(localpath+"/"+bible_version.filename);
     m_db_notes  = QSqlDatabase::addDatabase("QSQLITE", "notes");
     m_db_notes.setDatabaseName(path_notes+"/notes.db");
 
@@ -59,17 +58,63 @@ DBHelper::DBHelper(const QString path_notes, QString version)
     }
 }
 
+QSqlDatabase DBHelper::createBibleDB(QString version, QString lang)
+{
+    QString localpath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
+    if (QFile::exists(localpath+"/_"+lang+"_"+version+".db")){
+        QFile local_db_file(localpath+"/_"+lang+"_"+version+".db");
+            local_db_file.remove();
+    }
+
+    QSqlDatabase new_db = QSqlDatabase::addDatabase("QSQLITE", "newBible");
+    new_db.setDatabaseName(localpath+"/_"+lang+"_"+version+".db");
+    new_db.open();
+    DBHelper::createBibleTable(new_db);
+    return new_db;
+}
+
+void DBHelper::insertBook(Book book, QSqlDatabase new_db){
+    int v_count=0;
+    for (Verse verse:book.verses){
+        DBHelper::insertVerse(verse,new_db);
+        v_count++;
+    }
+    qDebug() << "InsertBook: " << book.book_id << QString(" verses: %1").arg(v_count);
+}
+
+int DBHelper::insertVerse(Verse verse, QSqlDatabase new_db){
+
+    QSqlQuery sql(new_db);
+    sql.prepare("INSERT INTO bibles (version, book, chap, verse, text, title, link) "
+                "VALUES(:version, :book, :chap, :verse, :text, :title, :link)");
+    sql.bindValue(":version", verse.version);
+    sql.bindValue(":book", verse.book);
+    sql.bindValue(":chap", verse.chap);
+    sql.bindValue(":verse", verse.verse_num);
+    sql.bindValue(":title", verse.title);
+    sql.bindValue(":text", verse.text);
+    sql.bindValue(":link", verse.link);
+
+    sql.exec();
+
+    //qDebug() << "InsertVerse" << sql.exec();
+    //qDebug() << sql.lastError();
+    //qDebug() << sql.executedQuery();
+
+    return  sql.lastInsertId().toInt();
+}
+
 /**
  * Create the Bible Table if not exists
  *
  * @brief DBHelper::createBibleTable
  */
-void DBHelper::createBibleTable()
+void DBHelper::createBibleTable(QSqlDatabase new_db)
 {
-    QSqlQuery sql(m_db);
+    QSqlQuery sql(new_db);
     sql.prepare("CREATE TABLE IF NOT EXISTS bibles (id INTEGER PRIMARY KEY, version TEXT, book TEXT, chap INTEGER, verse INTEGER, text TEXT, title TEXT, link TEXT);");
     qDebug() << "Create Bible Table" << sql.exec();
-
 }
 
 /**
@@ -84,6 +129,27 @@ void DBHelper::createNoteTable()
     qDebug() << "Create Note Table" << sql.exec();
 }
 
+Verse DBHelper::GetVerse(QString version, QString ref)
+{
+    QSqlQuery query(m_db);
+
+    Verse verse(version);
+    verse.setRef(ref);
+
+    query.prepare("SELECT * FROM bibles WHERE version=:version AND book=:book_id AND chap=:chap AND verse=:verse;");
+    query.bindValue(":version", verse.version);
+    query.bindValue(":book_id", verse.book);
+    query.bindValue(":chap", verse.chap);
+    query.bindValue(":verse", verse.verse_num);
+
+    qDebug() << "GetVerse query" << query.exec();
+    query.first();
+    verse.text = query.value(5).toString();
+    verse.title = query.value(6).toString();
+    verse.link = query.value(7).toString();
+
+    return verse;
+}
 
 /**
  * Get the book as vector of verses
@@ -96,6 +162,7 @@ void DBHelper::createNoteTable()
 Book DBHelper::GetBook(QString version, QString book_id)
 {
     Book book(book_id);
+    book.version = version;
     QSqlQuery query(m_db);
 
     query.prepare("SELECT * FROM bibles WHERE version=:version AND book=:book_id;");
@@ -104,7 +171,7 @@ Book DBHelper::GetBook(QString version, QString book_id)
 
     qDebug() << "GetBook query" << query.exec();
     //qDebug() << query.lastError();
-    //qDebug() << query.executedQuery();
+    qDebug() << query.executedQuery();
 
     while (query.next())
     {
@@ -124,6 +191,7 @@ Book DBHelper::GetBook(QString version, QString book_id)
         verse.link = stemp;
         book.addVerse(verse);
     }
+    book.setChap_Vers();
     return book;
 }
 

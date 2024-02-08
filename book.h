@@ -11,10 +11,14 @@ public:
 
     std::vector<Verse> verses;
     QString book_id="";
+    QString version="";
     int num_cap=0;
+    std::vector<int> chap_vers;
 
     void addVerse(Verse v);
-    QStringList getStringList();
+    QStringList getStringList();    
+    std::vector<Verse> getPassage(QString ref1, QString ref2);
+    void setChap_Vers();
 
 private:
 

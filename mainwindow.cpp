@@ -18,8 +18,22 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QClipboard>
+#include <QTimer>
+#include <QProcess>
+#include <QThread>
+#include <QSound>
+#include <QXmlStreamReader>
+#include <algorithm>
 
-QString app_release = "0.1.4";
+QString app_release = "0.1.18";
+
+QProcess * process1;
+QSound * player;
+Verse verse_of_the_day;
+
+QString localpath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/BibleMate";
+QString language;
+QStringList chapters, verses;
 QDateTime date = QDateTime::currentDateTime();
 QString today = date.toString("yyyy.MM.dd");
 QSettings settings("Mate-Solutions", "Bible-Mate");
@@ -27,7 +41,6 @@ DBHelper dbhelper;
 Note selNote_T1, selNote_T3, selNote_T4;
 Verse selVerse;
 const QColor yellow	( 255, 255,   0 );
-
 
 QStringList books_id = {
     "Gen","Exod","Lev","Num","Deut","Josh","Judg","Ruth","1Sam","2Sam",
@@ -38,6 +51,17 @@ QStringList books_id = {
     "Eph","Phil","Col","1Thess","2Thess","1Tim","2Tim","Titus","Phlm",
     "Heb","Jas","1Pet","2Pet","1John","2John","3John","Jude","Rev"};
 
+QStringList promises = {
+    "1John.2:25", "Rom.9:8", "Gen.13:15", "Heb.10:36", "Ps.105:8", "Ps.89:34", "Gen.28:15",
+    "2Sam.7:25", "Acts.2:39", "Rom.4:16", "2Cor.1:20", "Heb.6:12", "Heb.10:23", "2Pet.1:4",
+    "Josh.21:45", "Ps.12:6", "Eph.2:12", "Ps.119:49", "Ps.119:148", "Gal.3:29", "Num.23:19",
+    "Ps.18:30", "Eccl.5:5", "Heb.11:13", "2Pet.3:4", "Ps.85:8", "Eph.1:13", "Ps.119:103",
+    "Ps.132:11", "Rom.4:21", "Eccl.5:4", "Rom.9:4", "Heb.8:6", "Heb.11:39", "Ps.119.50",
+    "Heb.6:15", "2Pet.3:9", "2Cor.7:1", "Rom.4:13", "Deut.23:23", "Ps.106:12", "Gal.3:19",
+    "Acts.7:17", "Heb.9:15", "Eph.6:2", "Jer.33:14", "Prov.25:14", "Luke.1:45", "2Cor.5:21",
+    "Isa.53:5", "1John.1:9", "Acts.4:12", "Deut.8:3", "1Pet.1:13", "Ezek.36:26", "Ps.27:4"
+};
+
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -46,6 +70,38 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->plainTextEdit_2->installEventFilter(this);
     ui->lineEdit_5->installEventFilter(this);
     ui->listView->installEventFilter(this);
+
+    // The thread and the worker are created in the constructor so it is always safe to delete them.
+    thread = new QThread();
+    worker = new Worker();
+
+    worker->moveToThread(thread);
+    //connect(worker, SIGNAL(valueChanged(QString)), ui->label, SLOT(setText(QString)));
+    connect(worker, SIGNAL(workRequested()), thread, SLOT(start()));
+    connect(thread, SIGNAL(started()), worker, SLOT(doWork()));
+    //connect(worker, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
+
+    bible_versions = {
+        {"it-IT", "Nuova Diodati", "nuovadiodati", "nuovadiodati.db", ":/res/img/it.png"},
+        {"it-IT", "Nuova Riveduta", "nuovariveduta", "nuovariveduta.db", ":/res/img/it.png"},
+        {"it-IT", "Diodati", "diodati","diodati.db",":/res/img/it.png"},
+        {"it-IT", "Cei 2008", "cei2008","cei2008.db",":/res/img/it.png"},
+        {"en-US", "English Standard", "esv","esv.db",":/res/img/us.png"},
+        {"en-US", "New International", "newinternationalversionus","newinternationalversionus.db",":/res/img/us.png"},
+        {"en-US", "New International 1984", "niv1984","niv1984.db",":/res/img/us.png"},
+        {"en-US", "King James", "kingjamesversion","kingjamesversion.db",":/res/img/us.png"},
+        {"en-US", "New King James", "newkingjamesversion","newkingjamesversion.db",":/res/img/us.png"},
+        {"en-US", "American Standard", "americanstandardversion","americanstandardversion.db",":/res/img/us.png"},
+        {"ru-RU", "Synodal", "synodal","synodal.db",":/res/img/ru.png"},
+        {"es-ES", "Reina Valera", "reinavalera","reinavalera.db",":/res/img/es.png"},
+        {"es-ES", "Sagradas Escrituras", "sagradasescrituras","sagradasescrituras.db",":/res/img/es.png"},
+        {"es-ES", "Portuguese", "port","port.db",":/res/img/pt.png"},
+        {"fr-FR", "La Bible Ostervald", "ostv1996","ostv1996.db",":/res/img/fr.png"},
+        {"de-DE", "Elberfelder Bibel", "elberfelder","elberfelder.db",":/res/img/de.png"},
+    };
+
+    version = settings.value("version","nuovadiodati").toString();
+    addImportedBibles();
 
     books_name = QStringList({
        tr("Genesis"),tr("Exodus"),tr("Leviticus"),tr("Numbers"),tr("Deuteronomy"),tr("Joshua"),tr("Judges"),tr("Ruth"),tr("1 Samuel"),tr("2 Samuel"),
@@ -57,15 +113,32 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
        tr("Hebrews"),tr("James"),tr("1 Peter"),tr("2 Peter"),tr("1 John"),tr("2 John"),tr("3 John"),tr("Jude"),tr("Revelation")});
 
     fontsize = settings.value("fontsize",16).toUInt();
-    version = settings.value("version","nuovadiodati").toString();
     lastribbon = settings.value("lastribbon","Gen.1:1").toString();
+
+    ui->book_CBox->blockSignals(true);
+    ui->chapter_CBox->blockSignals(true);
+    //ui->version_CBox->blockSignals(true);
+
+    ui->book_CBox->addItems(books_name);
+
+    /*int id=0;
+    for (Bible_version bl:bible_versions){
+        ui->version_CBox->addItem(QIcon(bl.icon),bl.name);
+        if (version==bl.version){
+            ui->version_CBox->setCurrentIndex(id);
+            language=bl.lang;
+        }
+        id++;
+    }*/
+
+    ui->book_CBox->blockSignals(false);
+    ui->chapter_CBox->blockSignals(false);
+    //ui->version_CBox->blockSignals(false);
 
     //path_bibles = qApp->applicationDirPath()+"/bibles";
     path_notes = settings.value("path_notes",
                                  QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toString();
-    dbhelper = DBHelper(path_notes,version);
-
-    ui->book_CBox->addItems(books_name);
+    dbhelper = DBHelper(path_notes,bible_versions.at(ui->version_CBox->currentIndex()));
 
     setComboBox(lastribbon);
 
@@ -77,22 +150,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->action18->setActionGroup(group);
     ui->action20->setActionGroup(group);
     ui->action22->setActionGroup(group);
-
-    //qDebug() << "Step 2";
-    QActionGroup* groupB = new QActionGroup( this );
-    groupB->setExclusive(true);
-    ui->actionNuova_Diodati->setActionGroup(groupB);
-    ui->actionNew_International->setActionGroup(groupB);
-    ui->actionCEI_2008->setActionGroup(groupB);
-    ui->actionDiodati->setActionGroup(groupB);
-    ui->actionKing_James->setActionGroup(groupB);
-    ui->actionNew_King_James->setActionGroup(groupB);
-    ui->actionNuova_Riveduta->setActionGroup(groupB);
-    ui->actionSynodal->setActionGroup(groupB);
-    ui->actionReina_Valera->setActionGroup(groupB);
-    ui->actionAmerican_Standard->setActionGroup(groupB);
-    ui->actionPortuguese->setActionGroup(groupB);
-    ui->actionSagratas_Escrituras->setActionGroup(groupB);
 
     switch (fontsize){
         case 14: ui->action14->setChecked(true);
@@ -107,28 +164,89 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         break;
     }
 
-    //qDebug() << "Step 3";
-    if (version=="nuovadiodati") ui->actionNuova_Diodati->setChecked(true);
-    else if (version=="newinternationalversionus") ui->actionNew_International->setChecked(true);
-    else if (version=="nuovariveduta") ui->actionNuova_Riveduta->setChecked(true);
-    else if (version=="cei2008") ui->actionCEI_2008->setChecked(true);
-    else if (version=="diodati") ui->actionDiodati->setChecked(true);
-    else if (version=="kingjamesversion") ui->actionKing_James->setChecked(true);
-    else if (version=="newkingjamesversion") ui->actionNew_King_James->setChecked(true);
-    else if (version=="synodal") ui->actionSynodal->setChecked(true);
-    else if (version=="reinavalera") ui->actionReina_Valera->setChecked(true);
-    else if (version=="americanstandardversion") ui->actionAmerican_Standard->setChecked(true);
-    else if (version=="port") ui->actionPortuguese->setChecked(true);
-    else if (version=="sagradasescrituras") ui->actionSagratas_Escrituras->setChecked(true);
-
     //ui->pushButton->click();
     ui->pushButton_7->setEnabled(false);
     //qDebug() << "Step 4";
+
+    srand(time(0));
+    int range = 9 - 1 + 1;
+    int num = rand() % range + 1;
+    QString picture;
+    if (num<10)
+        picture=QString(":/res/pictures/img/pic0%1.jpg").arg(num);
+    else
+        picture=QString(":/res/pictures/img/pic%1.jpg").arg(num);
+    QPixmap p = QPixmap( picture );
+    int w = ui->label_20->width();
+    int h = ui->label_20->height();
+    ui->label_20->setPixmap( p.scaled(w,h,Qt::KeepAspectRatio) );
+
+    range = promises.size()-1+1;
+    num = rand() % range + 1;
+    verse_of_the_day = dbhelper.GetVerse(version,promises.at(num-1));
+    ui->label_21->setText(verse_of_the_day.text+" ("+verse_of_the_day.getRef()+")");
+    ui->label_21->setWordWrap(true);
+
+    QTimer::singleShot(200, this, SLOT(executeWhenVisible()));
+
+
+}
+
+void MainWindow::executeWhenVisible(){    
+    ui->pushButton->click();
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 MainWindow::~MainWindow()
 {
+    /*if (process2!=NULL && process2->processId()>0){
+        process2->terminate();
+        process2->waitForFinished();
+        delete process2;
+        process2=NULL;
+    }*/
+    if (player!=NULL && !player->isFinished()){
+        player->stop();
+        delete player;
+        player=NULL;
+    }
     delete ui;
+}
+
+void MainWindow::addImportedBibles()
+{
+    QDir directory(localpath);
+    QStringList files = directory.entryList(QStringList() << "*.db" << "*.DB",QDir::Files);
+    for (QString file:files){
+        if (file.left(1)=="_"){
+            QString lang = file.split("_")[1];
+            QString icon = ":/res/img/"+lang.split("-")[1].toLower()+".png";
+            QString name = file.split("_")[2].remove(".db");
+            QString filename = file;
+            QString vers = file.split("_")[2].remove(".db");
+            bool found=false;
+            for (Bible_version bv:bible_versions){
+                if (bv.name==name && bv.lang==lang){
+                    found=true;
+                    break;
+                }
+            }
+            if (!found)
+                bible_versions.push_back({lang,name,vers,filename,icon});
+        }
+    }
+    ui->version_CBox->blockSignals(true);
+    ui->version_CBox->clear();
+    int id=0;
+    for (Bible_version bl:bible_versions){
+        ui->version_CBox->addItem(QIcon(bl.icon),bl.name);
+        if (version==bl.version){
+            ui->version_CBox->setCurrentIndex(id);
+            language=bl.lang;
+        }
+        id++;
+    }
+    ui->version_CBox->blockSignals(false);
 }
 
 void MainWindow::setComboBox(QString ref)
@@ -137,18 +255,25 @@ void MainWindow::setComboBox(QString ref)
     ui->book_CBox->setCurrentIndex(idx);
 
     int book_chaps = dbhelper.getNumChapters(ref.split(".")[0]);
+    //int book_chaps = book.chap_vers.size();
+    chapters.clear();
     for (int i=1; i<=book_chaps; i++){
         chapters.push_back(QString::number(i));
     }
+    ui->chapter_CBox->clear();
     ui->chapter_CBox->addItems(chapters);
     ui->chapter_CBox->setCurrentText(ref.split(".")[1].split(":")[0]);
 
     int num_verses = dbhelper.getNumVerses(
                 ref.split(".")[0],
                 ref.split(".")[1].split(":")[0]);
+    //int chap = ref.split(".")[1].split(":")[0].toInt();
+    //int num_verses = book.chap_vers.at(chap-1);
+    verses.clear();
     for (int i=1; i<=num_verses; i++){
         verses.push_back(QString::number(i));
     }
+    ui->verse_CBox->clear();
     ui->verse_CBox->addItems(verses);
     ui->verse_CBox->setCurrentText(ref.split(".")[1].split(":")[1]);
 
@@ -211,7 +336,9 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
         selNote_T1.editing = false;
 
         for (Note note:allNotes_T1){
-            if (note.chap==selNote_T1.chap && note.verse==selNote_T1.verse){
+            if (note.book_id==selNote_T1.book_id &&
+                note.chap==selNote_T1.chap &&
+                note.verse==selNote_T1.verse){
 
                 selNote_T1.id =note.id;
                 selNote_T1.text = note.text;
@@ -246,6 +373,8 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
 
     ui->pushButton_7->setEnabled(true);
     ui->pushButton_13->setEnabled(true);
+    if (language!="ru-RU")
+        ui->pushButton_24->setEnabled(true);
 }
 
 /**
@@ -309,7 +438,9 @@ void MainWindow::on_pushButton_clicked()                                        
             break;
         }
     }
-    book = dbhelper.GetBook(version, book_sel);
+    if (book.book_id!=book_sel || book.version!=version){
+        book = dbhelper.GetBook(version, book_sel);
+    }
 
     /*int book_chaps = dbhelper.getNumChapters(book_sel);
     chapters.clear();
@@ -417,6 +548,7 @@ void MainWindow::on_pushButton_clicked()                                        
     ui->pushButton_7->setEnabled(false);
     ui->pushButton_3->setEnabled(false);
     ui->pushButton_9->setEnabled(false);
+    ui->pushButton_24->setEnabled(false);
 }
 
 /**
@@ -464,6 +596,10 @@ void MainWindow::on_pushButton_3_clicked()                                      
     if (!note_exist) {
         allNotes_T1.push_back(selNote_T1);
     }
+    QString book_id = books_id.at(ui->book_CBox->currentIndex());
+    QString ref=book_id+"."+index.at(ui->listView->indexAt(QPoint(0,0)).row());
+    setComboBox(ref);
+    ui->pushButton->click();
 
     //ui->plainTextEdit->setPlainText(selNote_T1.text);
     //ui->lineEdit_3->setText(selNote_T1.title);
@@ -608,28 +744,6 @@ void MainWindow::on_pushButton_5_clicked()                                      
 }
 
 
-
-
-void MainWindow::on_actionNuova_Diodati_triggered()
-{
-    version="nuovadiodati";
-    settings.setValue("version","nuovadiodati");
-
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_actionNew_International_triggered()
-{
-    version="newinternationalversionus";
-    settings.setValue("version","newinternationalversionus");
-
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
-}
-
-
 void MainWindow::on_action22_triggered()
 {
     fontsize=22;
@@ -679,70 +793,11 @@ void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("About"));
-    msgBox.setText(tr("Bible Mate vers.")+ app_release + tr("\nFree to read and study the Bible."));
+    msgBox.setTextFormat(Qt::RichText);
+    msgBox.setText(tr("Bible Mate vers.")+ app_release + "<br><br>" + tr("Free offline program to read and study the Bible, the Holy Word of God.")+"<br><br>"+"<a href=\"https://www.paypal.com/donate/?hosted_button_id=DTG4LEFSQDDBL\">"+tr("Make a donation!")+"</a>");
     msgBox.setIconPixmap(QPixmap(":/res/img/ic_launcher.png"));
     msgBox.exec();
 
-}
-
-
-void MainWindow::on_actionKing_James_triggered()
-{
-    version="kingjamesversion";
-    settings.setValue("version","kingjamesversion");
-
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_actionNew_King_James_triggered()
-{
-    version="newkingjamesversion";
-    settings.setValue("version","newkingjamesversion");
-
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_actionCEI_2008_triggered()
-{
-    version="cei2008";
-    settings.setValue("version","cei2008");
-
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_actionNuova_Riveduta_triggered()
-{
-    version="nuovariveduta";
-    settings.setValue("version","nuovariveduta");
-
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_actionDiodati_triggered()
-{
-    version="diodati";
-    settings.setValue("version","diodati");
-
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_actionSynodal_triggered()
-{
-    version="synodal";
-    settings.setValue("version","synodal");
-
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
 }
 
 
@@ -803,13 +858,13 @@ void MainWindow::on_pushButton_6_clicked()
 }
 
 
-void MainWindow::on_chapter_CBox_currentTextChanged(const QString &arg1)
+void MainWindow::on_chapter_CBox_currentIndexChanged(int index)
 {
-    static int count=0;
+    static int count=1;
     if (count>0){
-        qDebug()<<arg1;
+        //qDebug()<<arg1;
         QString book_sel = books_id.at(ui->book_CBox->currentIndex());
-        int num_verses = dbhelper.getNumVerses(book_sel, arg1);
+        int num_verses = dbhelper.getNumVerses(book_sel, QString("%1").arg(index+1));
         verses.clear();
         for (int i=1; i<=num_verses; i++){
             verses.push_back(QString::number(i));
@@ -839,7 +894,7 @@ void MainWindow::on_pushButton_7_clicked()                                      
 
 void MainWindow::on_book_CBox_currentIndexChanged(int index)
 {
-    static int count=0;
+    static int count=1;
     if (count>0){
         qDebug()<<books_id.at(index);
         int book_chaps = dbhelper.getNumChapters(books_id.at(index));
@@ -862,7 +917,7 @@ void MainWindow::on_pushButton_8_clicked()
     setComboBox(ref);
     ui->pushButton->click();
 
-    ui->tabWidget->setCurrentIndex(0);
+    ui->tabWidget->setCurrentIndex(1);
 }
 
 
@@ -991,7 +1046,7 @@ void MainWindow::on_actionNotes_file_location_triggered()
     if ( path_notes.isNull() == false )
     {
         settings.setValue("path_notes",path_notes);
-        dbhelper = DBHelper(path_notes,version);
+        dbhelper = DBHelper(path_notes,bible_versions.at(ui->version_CBox->currentIndex()));
         ui->pushButton->click();
     }
 }
@@ -1077,7 +1132,7 @@ void MainWindow::on_pushButton_12_clicked()
     setComboBox(ref);
     ui->pushButton->click();
 
-    ui->tabWidget->setCurrentIndex(0);
+    ui->tabWidget->setCurrentIndex(1);
 }
 
 void MainWindow::on_pushButton_16_clicked()
@@ -1258,42 +1313,181 @@ void MainWindow::on_pushButton_15_clicked()
 }
 
 
-void MainWindow::on_actionReina_Valera_triggered()
+void MainWindow::on_pushButton_24_clicked()             //Start reading
 {
-    version="reinavalera";
-    settings.setValue("version","reinavalera");
+    if (player!=NULL && !player->isFinished()){
+        player->stop();
+        delete player;
+        player=NULL;
+        ui->pushButton_24->setIcon(QIcon(":/res/img/speech2.png"));
+    }
+    else{
+        process1 = new QProcess(this);
+        //process2 = new QProcess(this);
+        QString texttoread;
+        QString ref1 = selVerse.getRef();
+        int chap = ref1.split(".")[1].split(":")[0].toInt();
+        int last = book.chap_vers.at(chap-1);        
+        QString ref2 = ref1.split(":")[0]+QString(":%1").arg(last);
+        std::vector<Verse> temp = book.getPassage(ref1,ref2);
+        for (Verse v:temp){
+            texttoread+=v.text
+                    .replace("DIO","Dio")
+                    .replace("--",";")
+                    .replace("-"," ")
+                    .remove("\"")
+                    .remove("»")
+                    .remove("«")
+                    .remove("<em>")
+                    .remove("[")
+                    .remove("]")
+                    .remove("</em>")+" ";
+        }        
 
-    dbhelper = DBHelper(path_notes,version);
+        QString script1 = "pico2wave -l "+language+" -w="+localpath+"/test.wav \"" +
+                texttoread + "\";";
+        process1->start("/bin/sh", QStringList() << "-c" << script1);
+
+        //qDebug()<<script1;
+        qDebug()<<process1->error();
+        process1->waitForFinished();
+        delete process1;
+        process1=NULL;
+
+        player = new QSound(localpath+"/test.wav");
+        player->play();
+        ui->pushButton_24->setIcon(QIcon(":/res/img/stop.png"));
+
+    }
+}
+
+void MainWindow::on_player_finished(){
+    ui->pushButton_24->setIcon(QIcon(":/res/img/speech2.png"));
+}
+
+
+QLineEdit *ed2;
+QComboBox *cbox1;
+QWidget *w;
+
+void MainWindow::on_actionImport_Osis_XML_Bible_triggered()
+{
+    QGridLayout *gridLayout = new QGridLayout;
+    QLabel *lab0 = new QLabel(tr("You can import and use all Bibles in XML OSIS format.")+"\n"+tr("In the following link you can find a huge number of free Bibles."));
+    QLabel *lab01 = new QLabel("<a href=\"https://github.com/bzerangue/osis-bibles/tree/master/\">osis-bibles</a>");
+    lab01->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    lab01->setOpenExternalLinks(true);
+    QLabel *lab1 = new QLabel(tr("Language")+":");
+    cbox1 = new QComboBox();
+    cbox1->addItems({"it-IT","en-US","en-GB","es-ES","fr-FR","de-DE"});
+    cbox1->setMaximumWidth(80);
+    QLabel *lab2 = new QLabel(tr("File:"));
+    ed2 = new QLineEdit();
+    QPushButton *select = new QPushButton("...");
+    select->setMaximumWidth(30);
+    QPushButton *import = new QPushButton(tr("Import"));
+    QPushButton *cancel = new QPushButton(tr("Cancel"));
+    import->setMaximumWidth(80);
+    cancel->setMaximumWidth(80);
+    pBar = new QProgressBar();
+    pBar->setRange(0,65);
+    pBar->setValue(0);
+
+    gridLayout->addWidget(lab0,0,0,1,3);
+    gridLayout->addWidget(lab01,1,0,1,3);
+    gridLayout->addWidget(lab1,2,0);
+    gridLayout->addWidget(cbox1,2,1);
+    gridLayout->addWidget(lab2,3,0);
+    gridLayout->addWidget(ed2,3,1);
+    gridLayout->addWidget(select,3,2);
+    gridLayout->addWidget(import,4,0);
+    gridLayout->addWidget(cancel,4,1);
+    gridLayout->addWidget(pBar,5,0,1,3);
+
+    w = new QWidget();
+    w->setLayout(gridLayout);
+    w->setWindowTitle(tr("Import Bible - Osis XML file"));
+
+    connect(worker, SIGNAL(valueChanged(int)), pBar, SLOT(setValue(int)));
+    connect(worker, SIGNAL(finished()), this, SLOT(on_work_finished()));
+    connect(select,SIGNAL(clicked()),this,SLOT(on_select_clicked()));
+    connect(import,SIGNAL(clicked()),this,SLOT(on_import_clicked()));
+    connect(cancel,SIGNAL(clicked()),this,SLOT(on_cancel_clicked()));
+
+    w->show();
+
+}
+
+void MainWindow::on_work_finished()
+{
+    addImportedBibles();
+    w->hide();
+}
+
+void MainWindow::on_select_clicked()
+{
+    QString path_osis = QFileDialog::getOpenFileName(this, tr("Imort Osis XML Bible"), localpath, tr("XML Files (*.xml)"));
+    ed2->setText(path_osis);
+}
+
+void MainWindow::on_import_clicked()
+{
+    if (ed2->text()!=""){
+
+        // To avoid having two threads running simultaneously, the previous thread is aborted.
+        worker->abort();
+        thread->wait(); // If the thread is not running, this will immediately return.
+        worker->requestWork(ed2->text(),cbox1->currentText());
+    }
+}
+
+void MainWindow::on_cancel_clicked()
+{    
+    w->hide();
+}
+
+
+void MainWindow::on_version_CBox_currentIndexChanged(int index)
+{
+    version=bible_versions.at(index).version;
+    language=bible_versions.at(index).lang;
+    settings.setValue("version",version);
+
+    dbhelper = DBHelper(path_notes,bible_versions.at(ui->version_CBox->currentIndex()));
     ui->pushButton->click();
 }
 
 
-void MainWindow::on_actionAmerican_Standard_triggered()
+void MainWindow::on_pushButton_25_clicked()
 {
-    version="americanstandardversion";
-    settings.setValue("version","americanstandardversion");
+    QString texttoread=verse_of_the_day.text
+            .replace("DIO","Dio")
+            .replace("--",";")
+            .replace("-"," ")
+            .remove("\"")
+            .remove("»")
+            .remove("«")
+            .remove("<em>")
+            .remove("[")
+            .remove("]")
+            .remove("</em>")+" ";
+    QString script1 = "pico2wave -l "+language+" -w="+localpath+"/test_day.wav \"" +
+            texttoread + "\";";
+    QProcess * process2 = new QProcess();
+    process2->start("/bin/sh", QStringList() << "-c" << script1);
 
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
-}
+    //qDebug()<<script1;
+    qDebug()<<process2->error();
+    process2->waitForFinished();
+    delete process2;
+    process2=NULL;
 
-
-void MainWindow::on_actionPortuguese_triggered()
-{
-    version="port";
-    settings.setValue("version","port");
-
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_actionSagratas_Escrituras_triggered()
-{
-    version="sagradasescrituras";
-    settings.setValue("version","sagradasescrituras");
-
-    dbhelper = DBHelper(path_notes,version);
-    ui->pushButton->click();
+    if (player!=NULL && !player->isFinished()){
+        player->stop();
+        delete player;
+        player=NULL;
+    }
+    player = new QSound(localpath+"/test_day.wav");
+    player->play();
 }
 

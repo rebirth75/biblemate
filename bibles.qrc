@@ -14,5 +14,7 @@
         <file>bibles/niv1984.db</file>
         <file>bibles/elberfelder.db</file>
         <file>bibles/americanstandardversion.db</file>
+        <file>bibles/ostv1996.db</file>
+        <file>bibles/esv.db</file>
     </qresource>
 </RCC>

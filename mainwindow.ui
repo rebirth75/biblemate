@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Bible Mate</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
@@ -22,8 +22,74 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
+      <widget class="QWidget" name="tab_4">
+       <attribute name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/res/img/gift.png</normaloff>:/res/img/gift.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Verse of the day</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_16">
+        <item>
+         <widget class="QLabel" name="label_20">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/res/BibleMate/img/pic01.jpg&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_19">
+          <item>
+           <widget class="QLabel" name="label_21">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_25">
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="resources.qrc">
+              <normaloff>:/res/img/speech2.png</normaloff>:/res/img/speech2.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>30</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="tab_1">
        <attribute name="icon">
         <iconset resource="resources.qrc">
@@ -45,9 +111,30 @@
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
+           <layout class="QVBoxLayout" name="verticalLayout_15">
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_4">
+                <item>
+                 <widget class="QLabel" name="label_19">
+                  <property name="text">
+                   <string>Bible Version</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="version_CBox">
+                  <property name="minimumSize">
+                   <size>
+                    <width>120</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_2">
                 <item>
@@ -72,7 +159,14 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="chapter_CBox"/>
+                 <widget class="QComboBox" name="chapter_CBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>70</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -86,7 +180,14 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="verse_CBox"/>
+                 <widget class="QComboBox" name="verse_CBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>70</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -134,7 +235,7 @@
                    <bool>false</bool>
                   </property>
                   <property name="text">
-                   <string>Add ribbon</string>
+                   <string>Add</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resources.qrc">
@@ -148,7 +249,7 @@
                    <bool>false</bool>
                   </property>
                   <property name="text">
-                   <string>Del ribbon</string>
+                   <string>Del</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resources.qrc">
@@ -165,6 +266,26 @@
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_18">
+              <item>
+               <widget class="QPushButton" name="pushButton_24">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/res/img/speech2.png</normaloff>:/res/img/speech2.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>30</width>
+                  <height>30</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
               <item>
                <widget class="QLabel" name="label_18">
                 <property name="text">
@@ -983,24 +1104,6 @@
      <addaction name="action20"/>
      <addaction name="action22"/>
     </widget>
-    <widget class="QMenu" name="menuBible_version">
-     <property name="title">
-      <string>Bible version</string>
-     </property>
-     <addaction name="actionNuova_Diodati"/>
-     <addaction name="actionNuova_Riveduta"/>
-     <addaction name="actionDiodati"/>
-     <addaction name="actionCEI_2008"/>
-     <addaction name="actionNew_International"/>
-     <addaction name="actionKing_James"/>
-     <addaction name="actionNew_King_James"/>
-     <addaction name="actionAmerican_Standard"/>
-     <addaction name="actionSynodal"/>
-     <addaction name="actionReina_Valera"/>
-     <addaction name="actionSagratas_Escrituras"/>
-     <addaction name="actionPortuguese"/>
-    </widget>
-    <addaction name="menuBible_version"/>
     <addaction name="menuFont_size"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
@@ -1015,6 +1118,7 @@
     </property>
     <addaction name="actionExit"/>
     <addaction name="actionNotes_file_location"/>
+    <addaction name="actionImport_Osis_XML_Bible"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -1061,105 +1165,9 @@
     <string>22</string>
    </property>
   </action>
-  <action name="actionNuova_Diodati">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/ita.png</normaloff>:/res/img/ita.png</iconset>
-   </property>
-   <property name="text">
-    <string>Nuova Diodati</string>
-   </property>
-  </action>
-  <action name="actionNew_International">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/us.png</normaloff>:/res/img/us.png</iconset>
-   </property>
-   <property name="text">
-    <string>New International</string>
-   </property>
-  </action>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
-   </property>
-  </action>
-  <action name="actionKing_James">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/us.png</normaloff>:/res/img/us.png</iconset>
-   </property>
-   <property name="text">
-    <string>King James</string>
-   </property>
-  </action>
-  <action name="actionNew_King_James">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/us.png</normaloff>:/res/img/us.png</iconset>
-   </property>
-   <property name="text">
-    <string>New King James</string>
-   </property>
-  </action>
-  <action name="actionCEI_2008">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/ita.png</normaloff>:/res/img/ita.png</iconset>
-   </property>
-   <property name="text">
-    <string>CEI 2008</string>
-   </property>
-  </action>
-  <action name="actionNuova_Riveduta">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/ita.png</normaloff>:/res/img/ita.png</iconset>
-   </property>
-   <property name="text">
-    <string>Nuova Riveduta</string>
-   </property>
-  </action>
-  <action name="actionDiodati">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/ita.png</normaloff>:/res/img/ita.png</iconset>
-   </property>
-   <property name="text">
-    <string>Diodati</string>
-   </property>
-  </action>
-  <action name="actionSynodal">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/ru.png</normaloff>:/res/img/ru.png</iconset>
-   </property>
-   <property name="text">
-    <string>Synodal</string>
    </property>
   </action>
   <action name="actionExit">
@@ -1176,52 +1184,9 @@
     <string>Path of notes file</string>
    </property>
   </action>
-  <action name="actionReina_Valera">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/sp.png</normaloff>:/res/img/sp.png</iconset>
-   </property>
+  <action name="actionImport_Osis_XML_Bible">
    <property name="text">
-    <string>Reina Valera</string>
-   </property>
-  </action>
-  <action name="actionAmerican_Standard">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/us.png</normaloff>:/res/img/us.png</iconset>
-   </property>
-   <property name="text">
-    <string>American Standard</string>
-   </property>
-  </action>
-  <action name="actionPortuguese">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/po.png</normaloff>:/res/img/po.png</iconset>
-   </property>
-   <property name="text">
-    <string>Portuguese</string>
-   </property>
-  </action>
-  <action name="actionSagratas_Escrituras">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/img/sp.png</normaloff>:/res/img/sp.png</iconset>
-   </property>
-   <property name="text">
-    <string>Sagradas Escrituras</string>
+    <string>Import Osis Bible...</string>
    </property>
   </action>
  </widget>

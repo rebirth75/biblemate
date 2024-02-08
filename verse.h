@@ -10,6 +10,7 @@ public:
     Verse(QString text, QString title, QString ref);
     Verse(QString version):version(version){};
     QString getRef();
+    void setRef(QString ref);
 
     QString text, book, title, version, link;
     int chap=0;

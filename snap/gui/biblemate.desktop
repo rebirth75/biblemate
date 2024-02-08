@@ -1,8 +1,8 @@
 [Desktop Entry]
 Version=0.1.4
-Name=BudgetMate
+Name=Biblemate
 Comment=Friendly helper to read your Bible
-Exec=BibleMate
+Exec=biblemate
 Icon=${SNAP}/meta/gui/biblemate.png
 Terminal=false
 Type=Application
