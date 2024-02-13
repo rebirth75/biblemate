@@ -10,7 +10,7 @@
 #include <QString>
 #include <QDebug>
 
-#include "dbhelper.h"
+//#include "dbhelper.h"
 
 int main(int argc, char *argv[])
 {

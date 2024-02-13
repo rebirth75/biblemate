@@ -1,13 +1,11 @@
-QT += core gui \
-      sql \
-      printsupport \
-      multimedia
-
+QT       += core gui \
+            sql \
+            printsupport \
+            multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
-
+CONFIG += c++17
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -42,10 +40,7 @@ FORMS += \
     mainwindow.ui
 
 TRANSLATIONS += \
-    BibleMate_it_IT.ts \
-    BibleMate_es_ES.ts \
-    BibleMate_fr_FR.ts \
-    BibleMate_ru_RU.ts
+    BibleMate_it_IT.ts
 CONFIG += lrelease
 CONFIG += embed_translations
 
@@ -54,45 +49,11 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES +=
-#    BibleMate_it_IT.ts \
-#    BibleMate_es_ES.ts \
-#    BibleMate_fr_FR.ts \
-#    BibleMate_ru_RU.ts \
-#    bibles/cei2008.db \
-#    bibles/diodati.db \
-#    bibles/kingjamesversion.db \
-#    bibles/newinternationalversionus.db \
-#    bibles/newkingjamesversion.db \
-#    bibles/nuovadiodati.db \
-#    bibles/nuovariveduta.db \
-#    bibles/reinavalera.db \
-#    bibles/synodal.db
-#    img/bible.png \
-#    img/bible2.png \
-#    img/exit.png \
-#    img/fontsize.png \
-#    img/ic_launcher.png \
-#    img/ita.png \
-#    img/note1.png \
-#    img/note2.png \
-#    img/note3.png \
-#    img/pen1.png \
-#    img/pen2.png \
-#    img/po.png \
-#    img/ru.png \
-#    img/search.png \
-#    img/sp.png \
-#    img/update.png \
- #    img/us.png
-
 RESOURCES += \
     bibles.qrc \
     resources.qrc
 
-#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/./release/ -llibespeak.so.1.1.48
-#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/./debug/ -llibespeak.so.1.1.48
-#else:unix: LIBS += -L$$PWD/./ -llibespeak.so.1.1.48
-
-INCLUDEPATH += $$PWD/.
-DEPENDPATH += $$PWD/.
+DISTFILES += \
+    BibleMate_es_ES.ts \
+    BibleMate_fr_FR.ts \
+    BibleMate_ru_RU.ts

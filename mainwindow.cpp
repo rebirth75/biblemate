@@ -26,7 +26,7 @@
 #include <algorithm>
 #include <QFontDialog>
 
-QString app_release = "0.9.19";
+QString app_release = "0.9.20";
 
 QProcess * process1;
 QSound * player;
@@ -42,6 +42,7 @@ DBHelper dbhelper;
 Note selNote_T1, selNote_T3, selNote_T4;
 Verse selVerse;
 const QColor yellow	( 255, 255,   0 );
+QRegularExpression re("font-size:[0-9]+pt;");
 
 QStringList books_id = {
     "Gen","Exod","Lev","Num","Deut","Josh","Judg","Ruth","1Sam","2Sam",
@@ -198,14 +199,14 @@ void MainWindow::addImportedBibles()
     QDir directory(localpath);
     QStringList files = directory.entryList(QStringList() << "*.db" << "*.DB",QDir::Files);
     for (QString file:files){
-        if (file.left(1)=="_"){
+        if (file.at(0)=="_"){
             QString lang = file.split("_")[1];
             QString icon = ":/res/img/"+lang.split("-")[1].toLower()+".png";
             QString name = file.split("_")[2].remove(".db");
             QString filename = file;
             QString vers = file.split("_")[2].remove(".db");
             bool found=false;
-            for (Bible_version bv:bible_versions){
+            for (const auto & bv:bible_versions){
                 if (bv.name==name && bv.lang==lang){
                     found=true;
                     break;
@@ -218,7 +219,7 @@ void MainWindow::addImportedBibles()
     ui->version_CBox->blockSignals(true);
     ui->version_CBox->clear();
     int id=0;
-    for (Bible_version bl:bible_versions){
+    for (const auto & bl:bible_versions){
         ui->version_CBox->addItem(QIcon(bl.icon),bl.name);
         if (version==bl.version){
             ui->version_CBox->setCurrentIndex(id);
@@ -309,7 +310,7 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
         selNote_T1.verse = index.at(current.row()).split(":")[1].toInt();
         selNote_T1.editing = false;
 
-        for (Note note:allNotes_T1){
+        for (const auto & note:allNotes_T1){
             if (note.book_id==selNote_T1.book_id &&
                 note.chap==selNote_T1.chap &&
                 note.verse==selNote_T1.verse){
@@ -324,7 +325,7 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
                 selNote_T1.ribbon = note.ribbon;
                 ui->lineEdit_3->setText(selNote_T1.title);
                 //ui->plainTextEdit->setPlainText(selNote_T1.text);
-                ui->plainTextEdit->appendHtml(selNote_T1.text.remove(QRegularExpression("font-size:[0-9]+pt;")));
+                ui->plainTextEdit->appendHtml(selNote_T1.text.remove(re));
                 selNote_T1.editing = note.editing;                
 
                 break;
@@ -368,7 +369,7 @@ void MainWindow::Update_tab3(const QModelIndex &current, const QModelIndex &prev
 
     ui->lineEdit_2->setText(selNote_T3.title);
     ui->plainTextEdit_2->clear();
-    ui->plainTextEdit_2->appendHtml(selNote_T3.text.remove(QRegularExpression("font-size:[0-9]+pt;")));
+    ui->plainTextEdit_2->appendHtml(selNote_T3.text.remove(re));
     ui->label_12->setText(selNote_T3.note_date);
     ui->label_14->setText(selNote_T3.getRef());
 
@@ -595,7 +596,7 @@ void MainWindow::on_pushButton_2_clicked()                                      
         ui->listView_2->setItemDelegate(listdelegate_tab2);
         ui->listView_2->setModel(model_tab2);
 
-        for (Verse verse:results){
+        for (const auto & verse:results){
             QStandardItem *item = new QStandardItem();
 
             item->setData("\n",ListViewDelegate_2::HeaderRole);
@@ -688,7 +689,7 @@ void MainWindow::on_pushButton_5_clicked()                                      
     selectionModel = ui->listView_3->selectionModel();
     connect(selectionModel, &QItemSelectionModel::currentChanged, this, &MainWindow::Update_tab3);
 
-    for (Note note:allNotes_T3){
+    for (const auto & note:allNotes_T3){
         QStandardItem *item = new QStandardItem();
         item->setData(note.title,ListViewDelegate_2::HeaderRole);        
         QTextEdit temp;

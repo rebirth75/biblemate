@@ -1,7 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "dbhelper.h"
+//#include "dbhelper.h"
+#include "book.h"
 #include "note.h"
 #include <QMainWindow>
 #include <QItemSelectionModel>

@@ -46,7 +46,7 @@ QStringList Book::getStringList()
     QStringList stringList;
 
     int cap=0;
-    for (Verse newVerse:this->verses){
+    for (const auto & newVerse:this->verses){
         if (newVerse.chap!=cap) {
 
             QString temp = QString::fromStdString("\nCap."+ std::to_string(newVerse.chap));

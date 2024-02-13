@@ -157,7 +157,10 @@ void Worker::doWork()
     }
     QXmlStreamReader xmlReader(&xmlFile);
 
-    QString type, ref, text, version;
+    //QString type;
+    QString ref;
+    QString text;
+    QString version;
     Book osis_book=Book();
     Verse verse;
     QString book_id = "";

@@ -76,7 +76,7 @@ QSqlDatabase DBHelper::createBibleDB(QString version, QString lang)
 
 void DBHelper::insertBook(Book book, QSqlDatabase new_db){
     int v_count=0;
-    for (Verse verse:book.verses){
+    for (const auto & verse:book.verses){
         DBHelper::insertVerse(verse,new_db);
         v_count++;
     }
