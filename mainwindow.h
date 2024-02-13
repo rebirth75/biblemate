@@ -47,16 +47,6 @@ private slots:
 
     void on_pushButton_5_clicked();
 
-    void on_action22_triggered();
-
-    void on_action20_triggered();
-
-    void on_action18_triggered();
-
-    void on_action16_triggered();
-
-    void on_action14_triggered();
-
     void on_actionAbout_triggered();
 
     void on_actionExit_triggered();
@@ -123,6 +113,16 @@ private slots:
 
     void on_pushButton_25_clicked();
 
+    void on_actionChange_font_triggered();
+
+    void on_pushButton_26_clicked();
+
+    void on_pushButton_27_clicked();
+
+    void on_pushButton_29_clicked();
+
+    void on_pushButton_28_clicked();
+
 private:
     Ui::MainWindow          *ui;
     QStringListModel        *m_Model;
@@ -136,7 +136,7 @@ private:
     QStringList             books_name;
 
 //    Note                    *selNote_T1, *selNote_T3;
-    int                     fontsize;
+//    int                     fontsize;
     QString                 version;
 //    QSettings               settings;
     QString                 path_bibles, path_notes;
@@ -147,6 +147,6 @@ private:
     QThread * thread;
     Worker * worker;
     QProgressBar * pBar;
-
+    QFont bibleFont;
 };
 #endif // MAINWINDOW_H

@@ -236,6 +236,7 @@ std::vector<Note> DBHelper::getNotes(QString book_id) {
         n.title = query.value(4).toString();
         n.text = query.value(5).toString();
         n.note_date = query.value(6).toString();
+        n.hlight_color = query.value(7).toString();
         n.ribbon = query.value(8).toBool();
         n.ribbon_title = query.value(9).toString();
         n.ribbon_date = query.value(10).toString();
@@ -261,6 +262,7 @@ std::vector<Note> DBHelper::getAllNotes(bool ribbon) {
         n.title = query.value(4).toString();
         n.text = query.value(5).toString();
         n.note_date = query.value(6).toString();
+        n.hlight_color = query.value(7).toString();
         n.ribbon = query.value(8).toBool();
         n.ribbon_title = query.value(9).toString();
         n.ribbon_date = query.value(10).toString();
@@ -288,6 +290,7 @@ std::vector<Note> DBHelper::getAllRibbons() {
         n.title = query.value(4).toString();
         n.text = query.value(5).toString();
         n.note_date = query.value(6).toString();
+        n.hlight_color = query.value(7).toString();
         n.ribbon = query.value(8).toBool();
         n.ribbon_title = query.value(9).toString();
         n.ribbon_date = query.value(10).toString();
@@ -302,14 +305,15 @@ std::vector<Note> DBHelper::getAllRibbons() {
 int DBHelper::insertNote(Note note){
 
     QSqlQuery sql(m_db_notes);
-    sql.prepare("INSERT INTO notes (book, chap, verse, title, text, note_date, ribbon_title, ribbon_date, ribbon) "
-                "VALUES(:book_id, :chap, :verse, :title, :text, :note_date, :ribbon_title, :ribbon_date, :ribbon)");
+    sql.prepare("INSERT INTO notes (book, chap, verse, title, text, note_date, highlight, ribbon_title, ribbon_date, ribbon) "
+                "VALUES(:book_id, :chap, :verse, :title, :text, :note_date, :highlight, :ribbon_title, :ribbon_date, :ribbon)");
     sql.bindValue(":book_id", note.book_id);
     sql.bindValue(":chap", note.chap);
     sql.bindValue(":verse", note.verse);
     sql.bindValue(":title", note.title);
     sql.bindValue(":text", note.text);
     sql.bindValue(":note_date", note.note_date);
+    sql.bindValue(":highlight", note.hlight_color);
     sql.bindValue(":ribbon_date", note.ribbon_date);
     sql.bindValue(":ribbon_title", note.ribbon_title);
     sql.bindValue(":ribbon", note.ribbon);
@@ -324,12 +328,13 @@ int DBHelper::insertNote(Note note){
 bool DBHelper::updateNote(Note note){
 
     QSqlQuery sql(m_db_notes);
-    sql.prepare("UPDATE notes SET title=:title, text=:text, note_date=:note_date, "
+    sql.prepare("UPDATE notes SET title=:title, text=:text, note_date=:note_date, highlight=:highlight, "
                 "ribbon_title=:ribbon_title, ribbon_date=:ribbon_date, ribbon=:ribbon "
                 "WHERE id=:id;");
     sql.bindValue(":title", note.title);
     sql.bindValue(":text", note.text);
     sql.bindValue(":note_date", note.note_date);
+    sql.bindValue(":highlight", note.hlight_color);
     sql.bindValue(":ribbon_date", note.ribbon_date);
     sql.bindValue(":ribbon_title", note.ribbon_title);
     sql.bindValue(":ribbon", note.ribbon);
@@ -378,6 +383,7 @@ Note DBHelper::findNote(QString ref){
         n.editing = false;
         n.text = query.value(5).toString();
         n.note_date = query.value(6).toString();
+        n.hlight_color = query.value(7).toString();
         n.ribbon = query.value(8).toBool();
         n.ribbon_title = query.value(9).toString();
         n.ribbon_date = query.value(10).toString();

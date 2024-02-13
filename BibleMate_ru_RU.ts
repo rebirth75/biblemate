@@ -8,27 +8,27 @@
         <translation type="vanished">Библейский приятель</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="95"/>
+        <location filename="mainwindow.ui" line="122"/>
         <source>Bible Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Библейская версия</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="116"/>
+        <location filename="mainwindow.ui" line="143"/>
         <source>Book</source>
         <translation>Книга</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="130"/>
+        <location filename="mainwindow.ui" line="157"/>
         <source>Chapter</source>
         <translation>Глава</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="151"/>
+        <location filename="mainwindow.ui" line="178"/>
         <source>Verse</source>
         <translation>Стих</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="182"/>
+        <location filename="mainwindow.ui" line="209"/>
         <source>GO</source>
         <translation>Обновлять</translation>
     </message>
@@ -41,229 +41,217 @@
         <translation type="vanished">Удалить закладку</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="248"/>
-        <source>Speech</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="259"/>
+        <location filename="mainwindow.ui" line="292"/>
         <source>References:</source>
         <translation>Рекомендации:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="287"/>
+        <location filename="mainwindow.ui" line="320"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/res/img/pen2.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="314"/>
+        <location filename="mainwindow.ui" line="347"/>
         <source>Pin this note</source>
         <translation>Исправьте это примечание</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="388"/>
-        <location filename="mainwindow.ui" line="849"/>
+        <location filename="mainwindow.ui" line="448"/>
+        <location filename="mainwindow.ui" line="924"/>
         <source>B</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="407"/>
-        <location filename="mainwindow.ui" line="868"/>
+        <location filename="mainwindow.ui" line="467"/>
+        <location filename="mainwindow.ui" line="943"/>
         <source>I</source>
         <translation>K</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="426"/>
-        <location filename="mainwindow.ui" line="887"/>
+        <location filename="mainwindow.ui" line="486"/>
+        <location filename="mainwindow.ui" line="962"/>
         <source>S</source>
         <translation>П</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="485"/>
+        <location filename="mainwindow.ui" line="545"/>
         <source>Search text</source>
         <translation>Поиск текста</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="530"/>
+        <location filename="mainwindow.ui" line="590"/>
         <source>Occurrences:</source>
         <translation>События:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="537"/>
+        <location filename="mainwindow.ui" line="597"/>
         <source>__</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="557"/>
+        <location filename="mainwindow.ui" line="617"/>
         <source>Exact phrase</source>
         <translation>Точная фраза</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="601"/>
+        <location filename="mainwindow.ui" line="661"/>
         <source>Notes manager</source>
         <translation>Менеджер заметок</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="706"/>
-        <location filename="mainwindow.ui" line="981"/>
+        <location filename="mainwindow.ui" line="766"/>
+        <location filename="mainwindow.ui" line="1056"/>
         <source>Update</source>
         <translation>Обновлять</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="660"/>
+        <location filename="mainwindow.ui" line="720"/>
         <source>Title</source>
         <translation>Заголовок</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1056"/>
+        <location filename="mainwindow.cpp" line="997"/>
         <source>New ribbon</source>
         <translation>Новая закладка</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="463"/>
-        <location filename="mainwindow.ui" line="938"/>
-        <location filename="mainwindow.cpp" line="925"/>
-        <location filename="mainwindow.cpp" line="973"/>
+        <location filename="mainwindow.ui" line="238"/>
+        <source>Add/Del</source>
+        <translation>Добавить/удалить</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="252"/>
+        <source>Highlight</source>
+        <translation>Выделять</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="523"/>
+        <location filename="mainwindow.ui" line="1013"/>
+        <location filename="mainwindow.cpp" line="866"/>
+        <location filename="mainwindow.cpp" line="914"/>
         <source>Print note</source>
         <translation>Распечатать заметку</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="587"/>
+        <location filename="mainwindow.ui" line="647"/>
         <source>Open in Reading</source>
         <translation>Открыть в Ридинге</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="626"/>
+        <location filename="mainwindow.ui" line="686"/>
         <source>Text filter:</source>
         <translation>Текстовый фильтр:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="640"/>
+        <location filename="mainwindow.ui" line="700"/>
         <source>Order by</source>
         <translation>Сортировать по</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="647"/>
+        <location filename="mainwindow.ui" line="707"/>
         <source>Date</source>
         <translation>Дата</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="670"/>
+        <location filename="mainwindow.ui" line="730"/>
         <source>Reference</source>
         <translation>Ссылка</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="734"/>
+        <location filename="mainwindow.ui" line="794"/>
         <source>Note title</source>
         <translation>Название заметки</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="754"/>
+        <location filename="mainwindow.ui" line="814"/>
         <source>Date:</source>
         <translation>Дата:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="761"/>
+        <location filename="mainwindow.ui" line="821"/>
         <source>[date]</source>
         <translation>[дата]</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="781"/>
+        <location filename="mainwindow.ui" line="841"/>
         <source>Ref.:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ссылка:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="788"/>
+        <location filename="mainwindow.ui" line="848"/>
         <source>[ref]</source>
-        <translation type="unfinished"></translation>
+        <translation>[Ссы.]</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="799"/>
         <source>Note text</source>
-        <translation>Текст заметки</translation>
+        <translation type="vanished">Текст заметки</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="924"/>
+        <location filename="mainwindow.ui" line="999"/>
         <source>Delete note</source>
         <translation>Удалить заметку</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="960"/>
+        <location filename="mainwindow.ui" line="1035"/>
         <source>RIbbons manager</source>
         <translation>Менеджер закладок</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1015"/>
+        <location filename="mainwindow.ui" line="1090"/>
         <source>Edit title</source>
         <translation>Изменить заголовок</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1025"/>
+        <location filename="mainwindow.ui" line="1100"/>
         <source>Del Ribbon</source>
         <translation>Удалить закладку</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1035"/>
+        <location filename="mainwindow.ui" line="1110"/>
         <source>Open in reading</source>
         <translation>Открыть в режиме чтения</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1058"/>
+        <location filename="mainwindow.ui" line="1133"/>
         <source>Options</source>
         <translation>Параметры</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1062"/>
-        <source>Font size</source>
-        <translation>Размер шрифта</translation>
+        <location filename="mainwindow.ui" line="1172"/>
+        <source>Path of notes file...</source>
+        <translation>Путь к файлу заметок...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1156"/>
+        <location filename="mainwindow.ui" line="1186"/>
+        <source>Bible font...</source>
+        <translation>Библейский шрифт...</translation>
+    </message>
+    <message>
+        <source>Font size</source>
+        <translation type="vanished">Размер шрифта</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="1177"/>
         <source>Import Osis Bible...</source>
-        <translation type="unfinished"></translation>
+        <translation>Импортировать Библию ОSIS...</translation>
     </message>
     <message>
         <source>Bible version</source>
         <translation type="vanished">Библейская версия</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1078"/>
+        <location filename="mainwindow.ui" line="1139"/>
         <source>Help</source>
         <translation>Помощь</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1084"/>
+        <location filename="mainwindow.ui" line="1145"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1100"/>
-        <source>14</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1108"/>
-        <source>16</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1116"/>
-        <source>18</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1124"/>
-        <source>20</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1132"/>
-        <source>22</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1137"/>
-        <location filename="mainwindow.cpp" line="792"/>
+        <location filename="mainwindow.ui" line="1158"/>
+        <location filename="mainwindow.cpp" line="715"/>
         <source>About</source>
         <translation>Информация</translation>
     </message>
@@ -272,515 +260,503 @@
         <translation type="vanished">Синодальная</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1146"/>
+        <location filename="mainwindow.ui" line="1167"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1151"/>
         <source>Path of notes file</source>
         <oldsource>Notes file location</oldsource>
-        <translation>Путь к файлу заметок</translation>
+        <translation type="vanished">Путь к файлу заметок</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="294"/>
+        <location filename="mainwindow.ui" line="327"/>
         <source>Your notes</source>
         <translation>Ваши заметки</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="14"/>
         <source>Bible Mate</source>
-        <translation type="unfinished"></translation>
+        <translation>Библейский друг</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="33"/>
         <source>Verse of the day</source>
-        <translation type="unfinished"></translation>
+        <translation>Стих дня</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="45"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/res/BibleMate/img/pic01.jpg&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="60"/>
+        <location filename="mainwindow.ui" line="62"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="72"/>
+        <location filename="mainwindow.ui" line="99"/>
         <source>Reading</source>
         <translation>Чтение</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="211"/>
-        <source>Add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="225"/>
-        <source>Del</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="449"/>
-        <location filename="mainwindow.ui" line="910"/>
+        <location filename="mainwindow.ui" line="509"/>
+        <location filename="mainwindow.ui" line="985"/>
         <source>Save note</source>
         <translation>Сохранить заметку</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="493"/>
+        <location filename="mainwindow.ui" line="553"/>
         <source>Text to search</source>
         <translation>Текст для поиска</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="503"/>
+        <location filename="mainwindow.ui" line="563"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>Genesis</source>
-        <translation type="unfinished"></translation>
+        <translation>Бытие</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>Exodus</source>
-        <translation type="unfinished"></translation>
+        <translation>Исход</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>Leviticus</source>
-        <translation type="unfinished"></translation>
+        <translation>Левит</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>Numbers</source>
-        <translation type="unfinished"></translation>
+        <translation>Числа</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>Deuteronomy</source>
-        <translation type="unfinished"></translation>
+        <translation>Второзаконие</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>Joshua</source>
-        <translation type="unfinished"></translation>
+        <translation>Иисус Навин</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>Judges</source>
-        <translation type="unfinished"></translation>
+        <translation>Книга Судей</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>Ruth</source>
-        <translation type="unfinished"></translation>
+        <translation>Руфь</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>1 Samuel</source>
-        <translation type="unfinished"></translation>
+        <translation>1-я Царств</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="110"/>
         <source>2 Samuel</source>
-        <translation type="unfinished"></translation>
+        <translation>2-я Царств</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="111"/>
         <source>1 Kings</source>
-        <translation type="unfinished"></translation>
+        <translation>3-я Царств</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="111"/>
         <source>2 Kings</source>
-        <translation type="unfinished"></translation>
+        <translation>4-я Царств</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
         <source>1 Chroicles</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">1 Пар.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="111"/>
         <source>2 Chronicles</source>
-        <translation type="unfinished"></translation>
+        <translation>2 Пар.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="111"/>
         <source>Ezra</source>
-        <translation type="unfinished"></translation>
+        <translation>Ездра</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="111"/>
         <source>Nehemiah</source>
-        <translation type="unfinished"></translation>
+        <translation>Неемия</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="111"/>
         <source>Esther</source>
-        <translation type="unfinished"></translation>
+        <translation>Есфирь</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="111"/>
         <source>Job</source>
-        <translation type="unfinished"></translation>
+        <translation>Иов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="111"/>
         <source>Psalms</source>
-        <translation type="unfinished"></translation>
+        <translation>Псалтирь</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="111"/>
         <source>Proverbs</source>
-        <translation type="unfinished"></translation>
+        <translation>Притчи</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="111"/>
+        <source>1 Chronicles</source>
+        <translation>1 Пар.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="112"/>
         <source>Ecclesiastes</source>
-        <translation type="unfinished"></translation>
+        <translation>Екклесиаст</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="112"/>
         <source>Song of Solomon</source>
-        <translation type="unfinished"></translation>
+        <translation>Песни Песней</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="112"/>
         <source>Isaiah</source>
-        <translation type="unfinished"></translation>
+        <translation>Исаия</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="112"/>
         <source>Jeremiah</source>
-        <translation type="unfinished"></translation>
+        <translation>Иеремия</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="112"/>
         <source>Lamentations</source>
-        <translation type="unfinished"></translation>
+        <translation>Плач Иеремии</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="112"/>
         <source>Ezekiel</source>
-        <translation type="unfinished"></translation>
+        <translation>Иезекииль</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="112"/>
         <source>Daniel</source>
-        <translation type="unfinished"></translation>
+        <translation>Даниил</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="112"/>
         <source>Hosea</source>
-        <translation type="unfinished"></translation>
+        <translation>Осия</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="112"/>
         <source>Joel</source>
-        <translation type="unfinished"></translation>
+        <translation>Иоиль</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="112"/>
         <source>Amos</source>
-        <translation type="unfinished"></translation>
+        <translation>Амос</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="107"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Obadiah</source>
-        <translation type="unfinished"></translation>
+        <translation>Авдия</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="107"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Jonah</source>
-        <translation type="unfinished"></translation>
+        <translation>Иона</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="107"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Micah</source>
-        <translation type="unfinished"></translation>
+        <translation>Михей</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="107"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Nahum</source>
-        <translation type="unfinished"></translation>
+        <translation>Наум</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="107"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Habakkuk</source>
-        <translation type="unfinished"></translation>
+        <translation>Аввакум</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="107"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Zephaniah</source>
-        <translation type="unfinished"></translation>
+        <translation>Софония</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="107"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Haggai</source>
-        <translation type="unfinished"></translation>
+        <translation>Аггей</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="107"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Zechariah</source>
-        <translation type="unfinished"></translation>
+        <translation>Захария</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="107"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Malachi</source>
-        <translation type="unfinished"></translation>
+        <translation>Малахия</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="114"/>
         <source>Matthew</source>
-        <translation type="unfinished"></translation>
+        <translation>от Матфея</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="114"/>
         <source>Mark</source>
-        <translation type="unfinished"></translation>
+        <translation>от Марка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="114"/>
         <source>Luke</source>
-        <translation type="unfinished"></translation>
+        <translation>от Луки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="114"/>
         <source>John</source>
-        <translation type="unfinished"></translation>
+        <translation>от Иоанна</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="114"/>
         <source>Acts</source>
-        <translation type="unfinished"></translation>
+        <translation>Деяния Апостолов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="114"/>
         <source>Romans</source>
-        <translation type="unfinished"></translation>
+        <translation>Послание к Римлянам</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="114"/>
         <source>1 Corinthians</source>
-        <translation type="unfinished"></translation>
+        <translation>1-е Коринфянам</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="114"/>
         <source>2 Corinthians</source>
-        <translation type="unfinished"></translation>
+        <translation>2-е Коринфянам</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="114"/>
         <source>Galatians</source>
-        <translation type="unfinished"></translation>
+        <translation>Галатам</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>Ephesians</source>
-        <translation type="unfinished"></translation>
+        <translation>Ефесянам</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>Philippians</source>
-        <translation type="unfinished"></translation>
+        <translation>Филиппийцам</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>Colossians</source>
-        <translation type="unfinished"></translation>
+        <translation>Колоссянам</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>1 Thessalonians</source>
-        <translation type="unfinished"></translation>
+        <translation>1-е Фессалоникийцам</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>2 Thessalonians</source>
-        <translation type="unfinished"></translation>
+        <translation>2-е Фессалоникийцам</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>1 Timothy</source>
-        <translation type="unfinished"></translation>
+        <translation>1-е Тимофею</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>2 Timothy</source>
-        <translation type="unfinished"></translation>
+        <translation>2-е Тимофею</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>Titus</source>
-        <translation type="unfinished"></translation>
+        <translation>Титу</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>Philemon</source>
-        <translation type="unfinished"></translation>
+        <translation>Филимону</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="110"/>
+        <location filename="mainwindow.cpp" line="116"/>
         <source>Hebrews</source>
-        <translation type="unfinished"></translation>
+        <translation>Евреям</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="110"/>
+        <location filename="mainwindow.cpp" line="116"/>
         <source>James</source>
-        <translation type="unfinished"></translation>
+        <translation>Иакова</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="110"/>
+        <location filename="mainwindow.cpp" line="116"/>
         <source>1 Peter</source>
-        <translation type="unfinished"></translation>
+        <translation>1 Петра</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="110"/>
+        <location filename="mainwindow.cpp" line="116"/>
         <source>2 Peter</source>
-        <translation type="unfinished"></translation>
+        <translation>2 Петра</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="110"/>
+        <location filename="mainwindow.cpp" line="116"/>
         <source>1 John</source>
-        <translation type="unfinished"></translation>
+        <translation>1 Иоанна</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="110"/>
+        <location filename="mainwindow.cpp" line="116"/>
         <source>2 John</source>
-        <translation type="unfinished"></translation>
+        <translation>2 Иоанна</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="110"/>
+        <location filename="mainwindow.cpp" line="116"/>
         <source>3 John</source>
-        <translation type="unfinished"></translation>
+        <translation>3 Иоанна</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="110"/>
+        <location filename="mainwindow.cpp" line="116"/>
         <source>Jude</source>
-        <translation type="unfinished"></translation>
+        <translation>Джуд</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="110"/>
+        <location filename="mainwindow.cpp" line="116"/>
         <source>Revelation</source>
-        <translation type="unfinished"></translation>
+        <translation>Откровение</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="362"/>
-        <location filename="mainwindow.cpp" line="1002"/>
-        <location filename="mainwindow.cpp" line="1150"/>
-        <location filename="mainwindow.cpp" line="1170"/>
-        <location filename="mainwindow.cpp" line="1190"/>
-        <location filename="mainwindow.cpp" line="1271"/>
+        <location filename="mainwindow.cpp" line="340"/>
+        <location filename="mainwindow.cpp" line="943"/>
+        <location filename="mainwindow.cpp" line="1104"/>
+        <location filename="mainwindow.cpp" line="1124"/>
+        <location filename="mainwindow.cpp" line="1144"/>
+        <location filename="mainwindow.cpp" line="1225"/>
         <source>not saved</source>
-        <translation type="unfinished"></translation>
+        <translation>не сохранено</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="487"/>
+        <location filename="mainwindow.cpp" line="459"/>
         <source>
 Chap.%1</source>
         <oldsource>
 Cap.%1</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Глава %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="794"/>
+        <location filename="mainwindow.cpp" line="717"/>
         <source>Bible Mate vers.</source>
-        <translation type="unfinished"></translation>
+        <translation>Библейский друг, версия </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="794"/>
+        <location filename="mainwindow.cpp" line="720"/>
+        <source>To know more about this and other projects</source>
+        <translation>узнать больше об этом и других проектах</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="722"/>
         <source>Make a donation!</source>
-        <translation type="unfinished"></translation>
+        <translation>Сделать пожертвование!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1300"/>
+        <location filename="mainwindow.cpp" line="1254"/>
         <source>Edit ribbon</source>
-        <translation type="unfinished"></translation>
+        <translation>Изменить закладку</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1398"/>
+        <location filename="mainwindow.cpp" line="1327"/>
         <source>You can import and use all Bibles in XML OSIS format.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы можете импортировать и использовать все Библии в формате XML OSIS.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1398"/>
+        <location filename="mainwindow.cpp" line="1327"/>
         <source>In the following link you can find a huge number of free Bibles.</source>
-        <translation type="unfinished"></translation>
+        <translation>По следующей ссылке вы можете найти огромное количество бесплатных Библий.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1402"/>
+        <location filename="mainwindow.cpp" line="1331"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Язык</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1406"/>
+        <location filename="mainwindow.cpp" line="1335"/>
         <source>File:</source>
-        <translation type="unfinished"></translation>
+        <translation>Файл:</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1410"/>
+        <location filename="mainwindow.cpp" line="1339"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>Импортировать</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1411"/>
+        <location filename="mainwindow.cpp" line="1340"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1431"/>
+        <location filename="mainwindow.cpp" line="1360"/>
         <source>Import Bible - Osis XML file</source>
-        <translation type="unfinished"></translation>
+        <translation>Импортировать XML-файл Библии - OSIS</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1451"/>
+        <location filename="mainwindow.cpp" line="1380"/>
         <source>Imort Osis XML Bible</source>
-        <translation type="unfinished"></translation>
+        <translation>Импортировать XML-библию OSIS</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1451"/>
+        <location filename="mainwindow.cpp" line="1380"/>
         <source>XML Files (*.xml)</source>
-        <translation type="unfinished"></translation>
+        <translation>XML-файлы (*.xml)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="835"/>
+        <location filename="mainwindow.cpp" line="763"/>
         <source>Delete current note</source>
         <translation>Удалить текущую заметку</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="794"/>
+        <location filename="mainwindow.cpp" line="718"/>
         <source>Free offline program to read and study the Bible, the Holy Word of God.</source>
-        <translation type="unfinished"></translation>
+        <translation>Бесплатная оффлайн программа для чтения и изучения Библии, Святого Слова Божьего.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="836"/>
+        <location filename="mainwindow.cpp" line="764"/>
         <source>Are you sure you want to delete the current note?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите удалить текущую заметку?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1042"/>
+        <location filename="mainwindow.cpp" line="983"/>
         <source>Directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Папка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1057"/>
-        <location filename="mainwindow.cpp" line="1301"/>
+        <location filename="mainwindow.cpp" line="998"/>
+        <location filename="mainwindow.cpp" line="1255"/>
         <source>Ribbon title:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="1076"/>
-        <source>New Ribbon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="1077"/>
-        <source>The ribbon is already here.</source>
-        <translation type="unfinished"></translation>
+        <translation>Название закладки:</translation>
     </message>
 </context>
 </TS>

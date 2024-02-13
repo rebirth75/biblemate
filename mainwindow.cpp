@@ -24,8 +24,9 @@
 #include <QSound>
 #include <QXmlStreamReader>
 #include <algorithm>
+#include <QFontDialog>
 
-QString app_release = "0.1.18";
+QString app_release = "0.9.19";
 
 QProcess * process1;
 QSound * player;
@@ -71,6 +72,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->lineEdit_5->installEventFilter(this);
     ui->listView->installEventFilter(this);
 
+    bibleFont = QApplication::font();
+
     // The thread and the worker are created in the constructor so it is always safe to delete them.
     thread = new QThread();
     worker = new Worker();
@@ -105,14 +108,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     books_name = QStringList({
        tr("Genesis"),tr("Exodus"),tr("Leviticus"),tr("Numbers"),tr("Deuteronomy"),tr("Joshua"),tr("Judges"),tr("Ruth"),tr("1 Samuel"),tr("2 Samuel"),
-       tr("1 Kings"),tr("2 Kings"),tr("1 Chroicles"),tr("2 Chronicles"),tr("Ezra"),tr("Nehemiah"),tr("Esther"),tr("Job"),tr("Psalms"),tr("Proverbs"),
+       tr("1 Kings"),tr("2 Kings"),tr("1 Chronicles"),tr("2 Chronicles"),tr("Ezra"),tr("Nehemiah"),tr("Esther"),tr("Job"),tr("Psalms"),tr("Proverbs"),
        tr("Ecclesiastes"),tr("Song of Solomon"),tr("Isaiah"),tr("Jeremiah"),tr("Lamentations"),tr("Ezekiel"),tr("Daniel"),tr("Hosea"),tr("Joel"),tr("Amos"),
        tr("Obadiah"), tr("Jonah"), tr("Micah"), tr("Nahum"), tr("Habakkuk"), tr("Zephaniah"), tr("Haggai"), tr("Zechariah"), tr("Malachi"),
        tr("Matthew"),tr("Mark"),tr("Luke"),tr("John"),tr("Acts"),tr("Romans"),tr("1 Corinthians"),tr("2 Corinthians"),tr("Galatians"),
        tr("Ephesians"),tr("Philippians"),tr("Colossians"),tr("1 Thessalonians"),tr("2 Thessalonians"),tr("1 Timothy"),tr("2 Timothy"),tr("Titus"),tr("Philemon"),
        tr("Hebrews"),tr("James"),tr("1 Peter"),tr("2 Peter"),tr("1 John"),tr("2 John"),tr("3 John"),tr("Jude"),tr("Revelation")});
 
-    fontsize = settings.value("fontsize",16).toUInt();
+    bibleFont.setPointSize(settings.value("fontsize",16).toInt());
+    bibleFont.setFamily(settings.value("fontfamily","Ubuntu").toString());
+    bibleFont.setStyleName(settings.value("fontstyle","Regular").toString());
+    bibleFont.setBold(settings.value("fontbold",false).toBool());
+    bibleFont.setItalic(settings.value("fontitalic",false).toBool());
     lastribbon = settings.value("lastribbon","Gen.1:1").toString();
 
     ui->book_CBox->blockSignals(true);
@@ -142,30 +149,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     setComboBox(lastribbon);
 
-    //qDebug() << "Step 1";
-    QActionGroup* group = new QActionGroup( this );
-    group->setExclusive(true);
-    ui->action14->setActionGroup(group);
-    ui->action16->setActionGroup(group);
-    ui->action18->setActionGroup(group);
-    ui->action20->setActionGroup(group);
-    ui->action22->setActionGroup(group);
-
-    switch (fontsize){
-        case 14: ui->action14->setChecked(true);
-        break;
-        case 16: ui->action16->setChecked(true);
-        break;
-        case 18: ui->action18->setChecked(true);
-        break;
-        case 20: ui->action20->setChecked(true);
-        break;
-        case 22: ui->action22->setChecked(true);
-        break;
-    }
-
     //ui->pushButton->click();
     ui->pushButton_7->setEnabled(false);
+    ui->pushButton_13->setEnabled(false);
     //qDebug() << "Step 4";
 
     srand(time(0));
@@ -199,12 +185,6 @@ void MainWindow::executeWhenVisible(){
 
 MainWindow::~MainWindow()
 {
-    /*if (process2!=NULL && process2->processId()>0){
-        process2->terminate();
-        process2->waitForFinished();
-        delete process2;
-        process2=NULL;
-    }*/
     if (player!=NULL && !player->isFinished()){
         player->stop();
         delete player;
@@ -251,11 +231,12 @@ void MainWindow::addImportedBibles()
 
 void MainWindow::setComboBox(QString ref)
 {
+    ui->book_CBox->blockSignals(true);
+
     int idx = books_id.indexOf(ref.split(".")[0]);
     ui->book_CBox->setCurrentIndex(idx);
 
     int book_chaps = dbhelper.getNumChapters(ref.split(".")[0]);
-    //int book_chaps = book.chap_vers.size();
     chapters.clear();
     for (int i=1; i<=book_chaps; i++){
         chapters.push_back(QString::number(i));
@@ -267,8 +248,6 @@ void MainWindow::setComboBox(QString ref)
     int num_verses = dbhelper.getNumVerses(
                 ref.split(".")[0],
                 ref.split(".")[1].split(":")[0]);
-    //int chap = ref.split(".")[1].split(":")[0].toInt();
-    //int num_verses = book.chap_vers.at(chap-1);
     verses.clear();
     for (int i=1; i<=num_verses; i++){
         verses.push_back(QString::number(i));
@@ -277,6 +256,7 @@ void MainWindow::setComboBox(QString ref)
     ui->verse_CBox->addItems(verses);
     ui->verse_CBox->setCurrentText(ref.split(".")[1].split(":")[1]);
 
+    ui->book_CBox->blockSignals(false);
 }
 
 
@@ -297,12 +277,9 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
 
     if (!ui->checkBox_2->isChecked()){
 
-        //if (ui->plainTextEdit->toPlainText()!=""||ui->lineEdit_3->text()!=""){
-
         if (previous.row()!=-1 && selNote_T1.editing){
             //save note temporary
             selNote_T1.title = ui->lineEdit_3->text();
-            //selNote_T1.text = ui->plainTextEdit->toPlainText();
             selNote_T1.text = ui->plainTextEdit->document()->toHtml();
 
             bool note_exist=false;
@@ -316,9 +293,6 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
                 }
             }
             if (!note_exist) allNotes_T1.push_back(selNote_T1);
-
-            //ui->plainTextEdit->clear();
-            //ui->lineEdit_3->clear();
         }
 
         ui->plainTextEdit->clear();
@@ -344,12 +318,13 @@ void MainWindow::Update_tab1(const QModelIndex &current, const QModelIndex &prev
                 selNote_T1.text = note.text;
                 selNote_T1.title = note.title;
                 selNote_T1.note_date = note.note_date;
+                selNote_T1.hlight_color = note.hlight_color;
                 selNote_T1.ribbon_date = note.ribbon_date;
                 selNote_T1.ribbon_title = note.ribbon_title;
                 selNote_T1.ribbon = note.ribbon;
                 ui->lineEdit_3->setText(selNote_T1.title);
                 //ui->plainTextEdit->setPlainText(selNote_T1.text);
-                ui->plainTextEdit->appendHtml(selNote_T1.text);
+                ui->plainTextEdit->appendHtml(selNote_T1.text.remove(QRegularExpression("font-size:[0-9]+pt;")));
                 selNote_T1.editing = note.editing;                
 
                 break;
@@ -393,7 +368,7 @@ void MainWindow::Update_tab3(const QModelIndex &current, const QModelIndex &prev
 
     ui->lineEdit_2->setText(selNote_T3.title);
     ui->plainTextEdit_2->clear();
-    ui->plainTextEdit_2->appendHtml(selNote_T3.text);
+    ui->plainTextEdit_2->appendHtml(selNote_T3.text.remove(QRegularExpression("font-size:[0-9]+pt;")));
     ui->label_12->setText(selNote_T3.note_date);
     ui->label_14->setText(selNote_T3.getRef());
 
@@ -428,6 +403,8 @@ void MainWindow::Update_tab2(const QModelIndex &current, const QModelIndex &prev
  */
 void MainWindow::on_pushButton_clicked()                                                //UPDATE READING TAB1
 {
+
+
     index.clear();
 
     QString book_sel = books_id.at(ui->book_CBox->currentIndex());
@@ -442,25 +419,15 @@ void MainWindow::on_pushButton_clicked()                                        
         book = dbhelper.GetBook(version, book_sel);
     }
 
-    /*int book_chaps = dbhelper.getNumChapters(book_sel);
-    chapters.clear();
-    for (int i=1; i<=book_chaps; i++){
-        chapters.push_back(QString::number(i));
-    }
-    ui->chapter_CBox->clear();
-    ui->chapter_CBox->addItems(chapters);
-    */
-
     allNotes_T1 = dbhelper.getAllNotes(true);
 
     QStandardItemModel *model_tab1 = new QStandardItemModel();
 
     ListViewDelegate *listdelegate_tab1;    
-    listdelegate_tab1 = new ListViewDelegate(fontsize, fontsize+3);
+    listdelegate_tab1 = new ListViewDelegate(bibleFont);
 
     ui->listView->setItemDelegate(listdelegate_tab1);
     ui->listView->setModel(model_tab1);
-    //ui->listView->setSelectionMode(QAbstractItemView::MultiSelection);
 
     selectionModel = ui->listView->selectionModel();
     connect(selectionModel, &QItemSelectionModel::currentChanged, this, &MainWindow::Update_tab1);
@@ -469,6 +436,7 @@ void MainWindow::on_pushButton_clicked()                                        
     for (Verse newVerse:book.verses){
         bool noteMark=false;
         bool ribbonMark=false;
+        QString hl_color="";
         for (Note note:allNotes_T1){
             if (note.getRef()==newVerse.getRef()){
                 if (note.ribbon){
@@ -477,6 +445,7 @@ void MainWindow::on_pushButton_clicked()                                        
                 if (note.text!=""||note.title!=""){
                     noteMark=true;
                 }
+                hl_color = note.hlight_color;
                 break;
             }
         }
@@ -493,6 +462,9 @@ void MainWindow::on_pushButton_clicked()                                        
             item->setData(temp,ListViewDelegate::HeaderRole);
 
             temp = QString("%1 ").arg(newVerse.verse_num);
+            if (hl_color!=""){
+                temp += "@"+hl_color+"@";
+            }
             if (noteMark){
                 //temp += QChar(0x2709) + QString(" ");
                 temp += QChar(0x270E) + QString(" ");
@@ -511,6 +483,9 @@ void MainWindow::on_pushButton_clicked()                                        
             item->setData(temp,ListViewDelegate::HeaderRole);
 
             temp = QString("%1 ").arg(newVerse.verse_num);
+            if (hl_color!=""){
+                temp += "@"+hl_color+"@";
+            }
             if (noteMark){
                 temp += QChar(0x270E) + QString(" ");
             }
@@ -519,15 +494,10 @@ void MainWindow::on_pushButton_clicked()                                        
             }
             temp += newVerse.text;
             temp=temp.replace("<em>","").replace("</em>","");            
-            //QPixmap bgPixmap(":/res/note1.png");
-            //QPixmap scaled = bgPixmap.scaled( QSize(10, 10), Qt::KeepAspectRatio, Qt::SmoothTransformation );
-            //QIcon icon(scaled);
-            //item->setIcon(icon);
             item->setData(temp,ListViewDelegate::SubheaderRole);
 
         }
         index.push_back(QString("%1:%2").arg(newVerse.chap).arg(newVerse.verse_num));
-        //index.push_back(QString::fromStdString(std::to_string(newVerse.chap)+":"+std::to_string(newVerse.verse_num)));
         model_tab1->appendRow(item);
     }
 
@@ -546,9 +516,12 @@ void MainWindow::on_pushButton_clicked()                                        
     }
 
     ui->pushButton_7->setEnabled(false);
+    ui->pushButton_13->setEnabled(false);
     ui->pushButton_3->setEnabled(false);
     ui->pushButton_9->setEnabled(false);
     ui->pushButton_24->setEnabled(false);
+
+
 }
 
 /**
@@ -558,15 +531,6 @@ void MainWindow::on_pushButton_clicked()                                        
  */
 void MainWindow::on_pushButton_3_clicked()                                                  //SAVE NOTE IN TAB1
 {
-    /*
-    Note note;
-    QString chap = index.at(ui->listView->currentIndex().row()).split(":")[0];
-    QString verse = index.at(ui->listView->currentIndex().row()).split(":")[1];
-    QString book_id = ui->book_CBox->currentText();
-    note = dbhelper.findNote(book_id+"."+chap+":"+verse);
-    */
-
-
     selNote_T1.note_date = today;
     //selNote_T1.text = ui->plainTextEdit->toPlainText();
     selNote_T1.text = ui->plainTextEdit->document()->toHtml();
@@ -596,14 +560,15 @@ void MainWindow::on_pushButton_3_clicked()                                      
     if (!note_exist) {
         allNotes_T1.push_back(selNote_T1);
     }
+
+    QModelIndex temp = selectionModel->currentIndex();
+
     QString book_id = books_id.at(ui->book_CBox->currentIndex());
     QString ref=book_id+"."+index.at(ui->listView->indexAt(QPoint(0,0)).row());
     setComboBox(ref);
     ui->pushButton->click();
 
-    //ui->plainTextEdit->setPlainText(selNote_T1.text);
-    //ui->lineEdit_3->setText(selNote_T1.title);
-
+    ui->listView->selectionModel()->setCurrentIndex(temp,QItemSelectionModel::SelectCurrent);
 }
 
 /**
@@ -744,57 +709,17 @@ void MainWindow::on_pushButton_5_clicked()                                      
 }
 
 
-void MainWindow::on_action22_triggered()
-{
-    fontsize=22;
-    settings.setValue("fontsize",fontsize);
-
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_action20_triggered()
-{
-    fontsize=20;
-    settings.setValue("fontsize",fontsize);
-
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_action18_triggered()
-{
-    fontsize=18;
-    settings.setValue("fontsize",fontsize);
-
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_action16_triggered()
-{
-    fontsize=16;
-    settings.setValue("fontsize",fontsize);
-
-    ui->pushButton->click();
-}
-
-
-void MainWindow::on_action14_triggered()
-{
-    fontsize=14;
-    settings.setValue("fontsize",fontsize);
-
-    ui->pushButton->click();
-}
-
-
 void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("About"));
     msgBox.setTextFormat(Qt::RichText);
-    msgBox.setText(tr("Bible Mate vers.")+ app_release + "<br><br>" + tr("Free offline program to read and study the Bible, the Holy Word of God.")+"<br><br>"+"<a href=\"https://www.paypal.com/donate/?hosted_button_id=DTG4LEFSQDDBL\">"+tr("Make a donation!")+"</a>");
+    msgBox.setText(tr("Bible Mate vers.")+ app_release + "<br><br>"
+                   + tr("Free offline program to read and study the Bible, the Holy Word of God.")+"<br><br>"
+                   +"<a href=\"https://www.mate-solutions.com/amico-di-bibbia/\">"
+                   +tr("To know more about this and other projects")+"</a><br><br>"
+                   +"<a href=\"https://www.paypal.com/donate/?hosted_button_id=DTG4LEFSQDDBL\">"
+                   +tr("Make a donation!")+"</a>");
     msgBox.setIconPixmap(QPixmap(":/res/img/ic_launcher.png"));
     msgBox.exec();
 
@@ -876,19 +801,32 @@ void MainWindow::on_chapter_CBox_currentIndexChanged(int index)
 }
 
 
-void MainWindow::on_pushButton_7_clicked()                                          //DELETE RIBBON SELECTED
+void MainWindow::on_pushButton_7_clicked()                                          //HIGHLIGHT SELECTED VERSE
 {
-    if (selNote_T1.ribbon){
-        selNote_T1.ribbon=false;
-        selNote_T1.ribbon_date="";
-        selNote_T1.ribbon_title="";
+    if (selNote_T1.hlight_color==""){
+
+        selNote_T1.hlight_color="yellow";
+        if (selNote_T1.id==0)
+            selNote_T1.id=dbhelper.insertNote(selNote_T1);
+        else
+            dbhelper.updateNote(selNote_T1);
+
+    }
+    else{
+
+        selNote_T1.hlight_color="";
         dbhelper.updateNote(selNote_T1);
 
-        QString book_id = books_id.at(ui->book_CBox->currentIndex());
-        QString ref=book_id+"."+index.at(ui->listView->indexAt(QPoint(0,0)).row());
-        setComboBox(ref);
-        ui->pushButton->click();
     }
+
+    QModelIndex temp = selectionModel->currentIndex();
+
+    QString book_id = books_id.at(ui->book_CBox->currentIndex());
+    QString ref=book_id+"."+index.at(ui->listView->indexAt(QPoint(0,0)).row());
+    setComboBox(ref);
+    ui->pushButton->click();
+
+    ui->listView->selectionModel()->setCurrentIndex(temp,QItemSelectionModel::SelectCurrent);
 }
 
 
@@ -1068,19 +1006,32 @@ void MainWindow::on_pushButton_13_clicked()
             else
                 dbhelper.updateNote(selNote_T1);
 
-            QString book_id = books_id.at(ui->book_CBox->currentIndex());
-            QString ref=book_id+"."+index.at(ui->listView->indexAt(QPoint(0,0)).row());
-            setComboBox(ref);
-            ui->pushButton->click();
         }
     }
     else{
-        QMessageBox msgBox;
+        /*QMessageBox msgBox;
         msgBox.setWindowTitle(tr("New Ribbon"));
         msgBox.setText(tr("The ribbon is already here."));
         msgBox.setIcon(QMessageBox::Warning);
-        msgBox.exec();
+        msgBox.exec();*/
+
+        selNote_T1.ribbon=false;
+        selNote_T1.ribbon_date="";
+        selNote_T1.ribbon_title="";
+        dbhelper.updateNote(selNote_T1);
+
     }
+
+    QModelIndex temp = selectionModel->currentIndex();
+
+    QString book_id = books_id.at(ui->book_CBox->currentIndex());
+    QString ref=book_id+"."+index.at(ui->listView->indexAt(QPoint(0,0)).row());
+    setComboBox(ref);
+    ui->pushButton->click();
+
+    ui->listView->selectionModel()->setCurrentIndex(temp,QItemSelectionModel::SelectCurrent);
+
+
 }
 
 
@@ -1344,9 +1295,35 @@ void MainWindow::on_pushButton_24_clicked()             //Start reading
                     .remove("</em>")+" ";
         }        
 
-        QString script1 = "pico2wave -l "+language+" -w="+localpath+"/test.wav \"" +
+        QString script1;
+
+#if (defined (_WIN32) || defined (_WIN64))
+
+        QString lang_id;
+        if (language=="it-IT")
+            lang_id="0x0410";
+        else if (language=="en-US")
+            lang_id="0x0409";
+        else if (language=="fr-FR")
+            lang_id="0x040C";
+        else if (language=="en-GB")
+            lang_id="0x0809";
+        else if (language=="es-ES")
+            lang_id="0x0c0A";
+        else if (language=="de-DE")
+            lang_id="0x0407";
+
+        script1 = "balcon -id \""+lang_id+"\" -w \""+localpath+"/test.wav\" -t \"" +
+                  texttoread + "\"";
+        process1->start(script1);
+
+#elif (defined (LINUX) || defined (__linux__))
+
+        script1= "pico2wave -l "+language+" -w="+localpath+"/test.wav \"" +
                 texttoread + "\";";
         process1->start("/bin/sh", QStringList() << "-c" << script1);
+
+#endif
 
         //qDebug()<<script1;
         qDebug()<<process1->error();
@@ -1471,10 +1448,37 @@ void MainWindow::on_pushButton_25_clicked()
             .remove("[")
             .remove("]")
             .remove("</em>")+" ";
-    QString script1 = "pico2wave -l "+language+" -w="+localpath+"/test_day.wav \"" +
-            texttoread + "\";";
+
+    QString script1;
     QProcess * process2 = new QProcess();
+
+#if (defined (_WIN32) || defined (_WIN64))
+
+    QString lang_id;
+    if (language=="it-IT")
+        lang_id="0x0410";
+    else if (language=="en-US")
+        lang_id="0x0409";
+    else if (language=="fr-FR")
+        lang_id="0x040C";
+    else if (language=="en-GB")
+        lang_id="0x0809";
+    else if (language=="es-ES")
+        lang_id="0x0c0A";
+    else if (language=="de-DE")
+        lang_id="0x0407";
+
+    script1 = "balcon -id \""+lang_id+"\" -w \""+localpath+"/test_day.wav\" -t \"" +
+              texttoread + "\"";
+    process2->start(script1);
+
+#elif (defined (LINUX) || defined (__linux__))
+
+    script1 = "pico2wave -l "+language+" -w="+localpath+"/test_day.wav \"" +
+                texttoread + "\";";
     process2->start("/bin/sh", QStringList() << "-c" << script1);
+
+#endif
 
     //qDebug()<<script1;
     qDebug()<<process2->error();
@@ -1489,5 +1493,52 @@ void MainWindow::on_pushButton_25_clicked()
     }
     player = new QSound(localpath+"/test_day.wav");
     player->play();
+}
+
+
+void MainWindow::on_actionChange_font_triggered()
+{
+    bool ok;
+    bibleFont = QFontDialog::getFont(
+                    &ok, bibleFont, this);
+    if (ok) {
+        // the user clicked OK and font is set to the font the user selected
+        qDebug()<<bibleFont.family();
+        settings.setValue("fontsize",bibleFont.pointSize());
+        settings.setValue("fontfamily",bibleFont.family());
+        settings.setValue("fontstyle",bibleFont.styleName());
+        settings.setValue("fontitalic",bibleFont.italic());
+        settings.setValue("fontbold",bibleFont.bold());
+        qDebug()<<"New font:"<<bibleFont.family()<<" "<<bibleFont.styleName()<<" "<<bibleFont.pointSize()
+               <<" Italic:"<<bibleFont.italic()<<" Bold:"<<bibleFont.bold();
+        ui->pushButton->click();
+    } else {
+        // the user canceled the dialog; font is set to the initial
+        // value, in this case Helvetica [Cronyx], 10
+    }
+}
+
+
+void MainWindow::on_pushButton_26_clicked()
+{
+    ui->plainTextEdit->zoomIn(2);
+}
+
+
+void MainWindow::on_pushButton_27_clicked()
+{
+    ui->plainTextEdit->zoomOut(2);
+}
+
+
+void MainWindow::on_pushButton_29_clicked()
+{
+    ui->plainTextEdit_2->zoomIn(2);
+}
+
+
+void MainWindow::on_pushButton_28_clicked()
+{
+    ui->plainTextEdit_2->zoomOut(2);
 }
 

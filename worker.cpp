@@ -185,7 +185,7 @@ void Worker::doWork()
         }
 
         if (xmlReader.isStartElement()){
-            QStringRef elementName = xmlReader.name();
+            QString elementName = xmlReader.name().toString();
             if (elementName == "work"){
                 QXmlStreamAttributes attrs = xmlReader.attributes();
                 version = attrs.value("osisWork").toString();

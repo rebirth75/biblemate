@@ -11,7 +11,7 @@ class ListViewDelegate : public QStyledItemDelegate
 public:
     enum datarole { HeaderRole = Qt::UserRole + 100, SubheaderRole};
 
-    ListViewDelegate(int fontsize, int titlesize);
+    ListViewDelegate(QFont bibleFont);
     ~ListViewDelegate();
 
     void paint(QPainter *painter,
@@ -23,7 +23,7 @@ public:
 
     static QSize iconSize;
     static int padding;
-    int fontsize, titlesize;
+    QFont bibleFont;
 };
 
 #endif // LISTVIEWDELEGATE_H

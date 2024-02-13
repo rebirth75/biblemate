@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1018</width>
-    <height>580</height>
+    <height>785</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -235,7 +235,7 @@
                    <bool>false</bool>
                   </property>
                   <property name="text">
-                   <string>Add</string>
+                   <string>Add/Del</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resources.qrc">
@@ -249,11 +249,11 @@
                    <bool>false</bool>
                   </property>
                   <property name="text">
-                   <string>Del</string>
+                   <string>Highlight</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resources.qrc">
-                    <normaloff>:/res/img/ribbon.png</normaloff>:/res/img/ribbon.png</iconset>
+                    <normaloff>:/res/img/highlight.png</normaloff>:/res/img/highlight.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -373,6 +373,33 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_16">
               <item>
+               <widget class="QPushButton" name="pushButton_27">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/res/img/zoom_out.png</normaloff>:/res/img/zoom_out.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_26">
+                <property name="font">
+                 <font>
+                  <pointsize>11</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/res/img/zoom_in.png</normaloff>:/res/img/zoom_in.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
                <spacer name="horizontalSpacer_9">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -466,7 +493,7 @@
              <widget class="QPlainTextEdit" name="plainTextEdit">
               <property name="font">
                <font>
-                <pointsize>12</pointsize>
+                <pointsize>14</pointsize>
                </font>
               </property>
              </widget>
@@ -827,9 +854,24 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_17">
               <item>
-               <widget class="QLabel" name="label_10">
+               <widget class="QPushButton" name="pushButton_28">
                 <property name="text">
-                 <string>Note text</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/res/img/zoom_out.png</normaloff>:/res/img/zoom_out.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_29">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/res/img/zoom_in.png</normaloff>:/res/img/zoom_in.png</iconset>
                 </property>
                </widget>
               </item>
@@ -927,7 +969,7 @@
              <widget class="QPlainTextEdit" name="plainTextEdit_2">
               <property name="font">
                <font>
-                <pointsize>12</pointsize>
+                <pointsize>14</pointsize>
                </font>
               </property>
              </widget>
@@ -1090,21 +1132,7 @@
     <property name="title">
      <string>Options</string>
     </property>
-    <widget class="QMenu" name="menuFont_size">
-     <property name="title">
-      <string>Font size</string>
-     </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/res/img/fontsize.png</normaloff>:/res/img/fontsize.png</iconset>
-     </property>
-     <addaction name="action14"/>
-     <addaction name="action16"/>
-     <addaction name="action18"/>
-     <addaction name="action20"/>
-     <addaction name="action22"/>
-    </widget>
-    <addaction name="menuFont_size"/>
+    <addaction name="actionChange_font"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1125,46 +1153,6 @@
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action14">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>14</string>
-   </property>
-  </action>
-  <action name="action16">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>16</string>
-   </property>
-  </action>
-  <action name="action18">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>18</string>
-   </property>
-  </action>
-  <action name="action20">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>20</string>
-   </property>
-  </action>
-  <action name="action22">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>22</string>
-   </property>
-  </action>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
@@ -1181,12 +1169,21 @@
   </action>
   <action name="actionNotes_file_location">
    <property name="text">
-    <string>Path of notes file</string>
+    <string>Path of notes file...</string>
    </property>
   </action>
   <action name="actionImport_Osis_XML_Bible">
    <property name="text">
     <string>Import Osis Bible...</string>
+   </property>
+  </action>
+  <action name="actionChange_font">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/img/fontsize.png</normaloff>:/res/img/fontsize.png</iconset>
+   </property>
+   <property name="text">
+    <string>Bible font...</string>
    </property>
   </action>
  </widget>

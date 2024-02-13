@@ -5,10 +5,9 @@ QSize ListViewDelegate::iconSize = QSize(10, 10);
 int ListViewDelegate::padding = 1;
 //int fontsize, titlesize;
 
-ListViewDelegate::ListViewDelegate(int fs, int ts)
+ListViewDelegate::ListViewDelegate(QFont bibleFont)
 {
-    ListViewDelegate::fontsize=fs;
-    ListViewDelegate::titlesize=ts;
+    ListViewDelegate::bibleFont=bibleFont;
 }
 
 ListViewDelegate::~ListViewDelegate()
@@ -24,16 +23,16 @@ QSize ListViewDelegate::sizeHint(const QStyleOptionViewItem &  option ,
     QString headerText = index.data(HeaderRole).toString();
     QString subheaderText = index.data(SubheaderRole).toString();
 
-    QFont headerFont = QApplication::font();
+    QFont headerFont = bibleFont;
 
     if (headerText.toStdString()=="\n")
         headerFont.setPixelSize(1); //PROVA
     else
-        headerFont.setPointSize(titlesize);
+        headerFont.setPointSize(headerFont.pointSize()+3);
 
     headerFont.setBold(true);
-    QFont subheaderFont = QApplication::font();
-    subheaderFont.setPointSize(fontsize);
+
+    QFont subheaderFont = bibleFont;
     QFontMetrics headerFm(headerFont);
     QFontMetrics subheaderFm(subheaderFont);
 
@@ -49,6 +48,9 @@ QSize ListViewDelegate::sizeHint(const QStyleOptionViewItem &  option ,
 
     QString verse = subheaderText.split(" ")[0];
     QString text_no_verse = subheaderText.remove(verse+" ");
+    if (text_no_verse.left(1)=="@"){
+        text_no_verse = text_no_verse.split("@")[2];
+    }
 
     /*
     QRect subheaderRect1 = subheaderFm.boundingRect(0, 0,
@@ -91,16 +93,16 @@ void ListViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     QString headerText = index.data(HeaderRole).toString();
     QString subheaderText = index.data(SubheaderRole).toString();
 
-    QFont headerFont = QApplication::font();
+    QFont headerFont = bibleFont;
 
     if (headerText.toStdString()=="\n")
         headerFont.setPixelSize(1); //PROVA
     else
-        headerFont.setPointSize(titlesize);
+        headerFont.setPointSize(headerFont.pointSize()+3);
 
     headerFont.setBold(true);
-    QFont subheaderFont = QApplication::font();
-    subheaderFont.setPointSize(fontsize);
+
+    QFont subheaderFont = bibleFont;
     QFont verseFont = QApplication::font();
     verseFont.setPointSize(10);
     QFontMetrics headerFm(headerFont);
@@ -121,6 +123,11 @@ void ListViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     QString verse = subheaderText.split(" ")[0];
     QString text_no_verse = subheaderText.remove(verse+" ");
+    QString hl_color ="";
+    if (text_no_verse.left(1)=="@"){
+        hl_color = text_no_verse.split("@")[1];
+        text_no_verse = text_no_verse.split("@")[2];
+    }
 
     QRect subheaderRect1 =
             subheaderFm.boundingRect(headerRect.left(), headerRect.bottom()+padding,
@@ -141,6 +148,13 @@ void ListViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     painter->setFont(verseFont);
     painter->drawText(subheaderRect1, Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap, verse);
+
+    if (hl_color!=""){
+        QColor hlc;
+        hlc.setNamedColor(hl_color);
+        painter->setBrush(QBrush(hlc));
+        painter->fillRect(subheaderRect2, painter->brush());
+    }
 
     painter->setFont(subheaderFont);
     painter->drawText(subheaderRect2, Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap, text_no_verse);

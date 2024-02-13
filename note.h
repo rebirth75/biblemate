@@ -13,7 +13,7 @@ public:
     QString title;
     QString text;
     QString note_date;
-    QString hlight_color;
+    QString hlight_color="";
     bool ribbon;
     bool editing;
     QString ribbon_title;
